@@ -123,5 +123,6 @@ pre-specified margin |Δ| < 0.01 is read as **statistical equivalence**, not mer
 Released under the **MIT License** (see [`LICENSE`](LICENSE)).
 
 If you use this benchmark, please cite the manuscript (Kanu et al., *A Leakage-Safe Benchmark for
-Single-Cell Differentiation Forecasting*, under review at *BMC Bioinformatics*, 2026). A
-`CITATION.cff` will be added once the DOI is assigned.
+Single-Cell Differentiation Forecasting*, under review at *BMC Bioinformatics*, 2026). Machine-readable
+citation metadata is in [`CITATION.cff`](CITATION.cff) (GitHub renders a "Cite this repository"
+button); the volume/DOI will be filled in once assigned.

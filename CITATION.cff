@@ -1,0 +1,39 @@
+cff-version: 1.2.0
+title: "Leakage-Safe Benchmark for Single-Cell Differentiation Forecasting"
+message: "If you use this software, please cite the associated article."
+type: software
+authors:
+  - family-names: Kanu
+    given-names: Victor Ikenna
+    affiliation: "Kumoh National Institute of Technology"
+  - family-names: Ajakwe
+    given-names: Ihunanya Udodiri
+    affiliation: "Kumoh National Institute of Technology"
+  - family-names: Isong
+    given-names: Josiah Ayoola
+    affiliation: "Kumoh National Institute of Technology"
+  - family-names: Ajakwe
+    given-names: Simeon Okechukwu
+    affiliation: "Kyungdong University"
+  - family-names: Kim
+    given-names: Dong-Seong
+    affiliation: "Kumoh National Institute of Technology"
+repository-code: "https://github.com/xaviwho/leakage-safe-benchmark"
+license: MIT
+preferred-citation:
+  type: article
+  title: "A Leakage-Safe Benchmark for Single-Cell Differentiation Forecasting"
+  authors:
+    - family-names: Kanu
+      given-names: Victor Ikenna
+    - family-names: Ajakwe
+      given-names: Ihunanya Udodiri
+    - family-names: Isong
+      given-names: Josiah Ayoola
+    - family-names: Ajakwe
+      given-names: Simeon Okechukwu
+    - family-names: Kim
+      given-names: Dong-Seong
+  journal: "BMC Bioinformatics"
+  year: 2026
+  # volume / issue / doi to be added once assigned
