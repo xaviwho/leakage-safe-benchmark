@@ -1,0 +1,11 @@
+{
+  "test_mae": 0.4333767674693836,
+  "test_mae_P": 0.7038759192451834,
+  "test_mae_D": 0.16287761569358367,
+  "val_mae": 0.41608138903819925,
+  "val_mae_P": 0.6562694109976291,
+  "val_mae_D": 0.17589336707876932,
+  "train_mae": 0.3945051656457192,
+  "n_test_predictions": 60,
+  "evaluation_note": "ODE evaluated on same normalized [0,1] scale as ML baselines"
+}

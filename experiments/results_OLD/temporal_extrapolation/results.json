@@ -1,0 +1,13 @@
+{
+  "n_early_train": 85,
+  "n_early_val": 15,
+  "n_late_test": 100,
+  "median_D_split": -0.0004202129703071253,
+  "val_mae": 0.4055410059807207,
+  "val_mae_P": 0.5402489266395568,
+  "val_mae_D": 0.2708330853218847,
+  "test_late_mae": 0.5232217421426488,
+  "test_late_mae_P": 0.5736127439633012,
+  "test_late_mae_D": 0.4728307403219958,
+  "degradation_pct": 29.018208868259958
+}

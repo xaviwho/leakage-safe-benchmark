@@ -1,0 +1,22 @@
+{
+  "RandomForest": {
+    "train_mae": 0.05137964382713936,
+    "val_mae": 0.09539403596329928,
+    "test_mae": 0.10165011975590914,
+    "test_mae_P": 0.10364811839731883,
+    "test_mae_D": 0.0996521211144994
+  },
+  "LinearRegression": {
+    "train_mae": 0.09239224810659483,
+    "val_mae": 0.08824085723040129,
+    "test_mae": 0.09983899122693735,
+    "test_mae_P": 0.10229337425146008,
+    "test_mae_D": 0.09738460820241457
+  },
+  "comparison": {
+    "transformer_test_mae": 0.08051705360412598,
+    "best_baseline": "LinearRegression",
+    "best_baseline_test_mae": 0.09983899122693735,
+    "transformer_improvement_pct": 19.353097808141875
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "test_mse": 0.009361851029098034,
+  "test_rmse": 0.09675665883595834,
+  "test_mae": 0.08051705360412598,
+  "test_mae_Pluripotency": 0.084795743227005,
+  "test_mae_Differentiation": 0.07623836398124695
+}

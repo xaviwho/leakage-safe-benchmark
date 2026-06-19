@@ -1,0 +1,36 @@
+{
+  "LinearRegression": {
+    "single_latency_ms": 0.05470000905916095,
+    "batch_latency_ms": 0.0568000104976818,
+    "memory_mb": 0.00047397613525390625,
+    "parameters": 10
+  },
+  "RandomForest": {
+    "single_latency_ms": 27.856799999426585,
+    "batch_latency_ms": 28.511800002888776,
+    "memory_mb": 0.5347929000854492,
+    "parameters": 6704
+  },
+  "Transformer": {
+    "single_latency_ms": 1.6253000067081302,
+    "batch_latency_ms": 2.309600000444334,
+    "memory_mb": 3.662351608276367,
+    "parameters": 827010,
+    "trainable_parameters": 827010,
+    "device": "cpu"
+  },
+  "ODE": {
+    "single_latency_ms": 2.1246000032988377,
+    "batch_latency_ms": 112.39649999333778,
+    "memory_mb": 0.0020542144775390625,
+    "parameters": 6
+  },
+  "metadata": {
+    "n_test_samples": 30,
+    "n_warmup": 10,
+    "n_timed_runs": 100,
+    "aggregation": "median",
+    "platform": "win32",
+    "device": "cpu"
+  }
+}

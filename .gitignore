@@ -1,0 +1,90 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Data (large / raw files — public datasets, referenced not redistributed)
+# Entire raw data tree is ~26GB; obtain via accessions in data/README.md
+data/raw/
+data/processed/*.h5ad
+*.zarr/
+*.h5ad
+*.h5
+*.loom
+*.mtx
+*.mtx.gz
+
+# Experiment Results
+experiments/results/*.png
+experiments/results/*.pdf
+experiments/results/*.pkl
+experiments/results/runs/
+
+# Model Checkpoints
+models/checkpoints/*.pt
+models/checkpoints/*.pth
+*.pt
+*.pth
+*.ckpt
+
+# Logs
+logs/
+*.log
+wandb/
+mlruns/
+
+# Environment Variables
+.env
+.env.local
+
+# Temporary Files
+tmp/
+temp/
+*.tmp
+
+# Coverage
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Documentation
+docs/_build/
+docs/.doctrees/
+
+# OS
+Thumbs.db

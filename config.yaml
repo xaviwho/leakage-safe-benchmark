@@ -1,0 +1,118 @@
+# Digital Twin Configuration
+
+# Project Settings
+project:
+  name: "Hybrid Physics-ML Digital Twin for Predicting Stem Cell Differentiation Dynamics"
+  short_name: "iPSC Digital Twin"
+  version: "0.1.0"
+  author: "Xavier Kanu"
+
+# Data Settings
+data:
+  raw_dir: "data/raw"
+  processed_dir: "data/processed"
+  simulated_dir: "data/simulated"
+
+# Simulation Parameters
+simulation:
+  # Time settings (in days)
+  duration: 14  # 2 weeks of differentiation
+  timesteps: 100  # Number of time points
+  dt: 0.01  # Integration step size
+
+  # Initial conditions
+  initial_population: 10000  # Number of cells
+  initial_pluripotency: 0.95  # Initial pluripotency marker level
+
+  # Culture parameters
+  culture:
+    temperature: 37.0  # Celsius
+    co2: 5.0  # Percentage
+    o2: 20.0  # Percentage
+    glucose_initial: 25.0  # mM
+
+  # Growth factors (relative concentrations)
+  growth_factors:
+    fgf2: 1.0  # Fibroblast growth factor (pluripotency)
+    activin_a: 0.0  # TGF-beta pathway
+    bmp4: 0.0  # Bone morphogenetic protein
+    retinoic_acid: 0.0  # Differentiation inducer
+
+# ODE Model Parameters
+ode_model:
+  # Gene regulatory network parameters
+  grn:
+    n_genes: 50  # Number of genes to model
+    hill_coefficient: 2.0  # Cooperativity
+    degradation_rate: 0.1  # mRNA degradation
+
+  # Cell cycle parameters
+  cell_cycle:
+    division_rate: 0.8  # Divisions per day
+    death_rate: 0.05  # Apoptosis rate
+
+  # Differentiation parameters
+  differentiation:
+    commitment_threshold: 0.3  # Pluripotency level for commitment
+    differentiation_rate: 0.15  # Rate of differentiation
+
+# Machine Learning Model Settings
+ml_models:
+  # LSTM predictor
+  lstm:
+    hidden_size: 128
+    num_layers: 2
+    dropout: 0.2
+    learning_rate: 0.001
+    batch_size: 32
+    epochs: 100
+
+  # Transformer predictor
+  transformer:
+    d_model: 128
+    nhead: 8
+    num_layers: 4
+    dim_feedforward: 512
+    dropout: 0.1
+    learning_rate: 0.0001
+    batch_size: 16
+    epochs: 100
+
+  # VAE for state space
+  vae:
+    latent_dim: 16
+    encoder_dims: [2000, 512, 128]
+    decoder_dims: [128, 512, 2000]
+    learning_rate: 0.001
+    beta: 1.0  # KL divergence weight
+
+# Digital Twin Settings
+digital_twin:
+  update_frequency: 1.0  # Update every N hours (simulated time)
+  prediction_horizon: 48  # Hours ahead to predict
+  uncertainty_quantification: true
+  adaptive_control: true
+
+# Visualization Settings
+visualization:
+  dashboard:
+    port: 8501
+    refresh_rate: 2.0  # Seconds
+
+  plots:
+    dpi: 300
+    format: "png"
+    style: "seaborn-v0_8-darkgrid"
+
+# Experiment Settings
+experiments:
+  output_dir: "experiments/results"
+  save_checkpoints: true
+  checkpoint_frequency: 10  # Every N epochs
+  random_seed: 42
+
+# Logging
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+  log_file: "logs/digital_twin.log"
+  console_output: true

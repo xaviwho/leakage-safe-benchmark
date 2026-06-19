@@ -1,0 +1,17 @@
+{
+  "baseline_comparison": {
+    "best_baseline": "Linear Regression",
+    "best_baseline_mae": 0.09983899122693735,
+    "transformer_mae": 0.08051705360412598,
+    "improvement_pct": 19.353097808141875
+  },
+  "temporal_extrapolation": {
+    "val_mae": 0.11679085685561101,
+    "test_late_mae": 0.09758406107624372,
+    "degradation_pct": -16.445461825074826
+  },
+  "lambda_network": {
+    "mean_lambda": 0.0,
+    "interpretation": "Physics model alone is near-optimal"
+  }
+}

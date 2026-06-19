@@ -1,0 +1,29 @@
+{
+  "Ridge": {
+    "test_mae": 0.08433494167657518,
+    "test_mae_P": 0.07885232326289743,
+    "test_mae_D": 0.08981756009025292
+  },
+  "RandomForest": {
+    "test_mae": 0.09543638845063018,
+    "test_mae_P": 0.08727663459612185,
+    "test_mae_D": 0.10359614230513854
+  },
+  "Transformer": {
+    "test_mae": 0.08605241775512695,
+    "test_mae_P": 0.0786973387002945,
+    "test_mae_D": 0.09340748190879822,
+    "best_epoch": 30
+  },
+  "ODE": {
+    "test_mae": 0.4146648992708805,
+    "test_mae_P": 0.6911457698792219,
+    "test_mae_D": 0.13818402866253907
+  },
+  "summary": {
+    "seed": 42,
+    "best_baseline_mae": 0.08433494167657518,
+    "transformer_mae": 0.08605241775512695,
+    "transformer_improvement_pct": -2.036494060953168
+  }
+}
