@@ -15,8 +15,13 @@ data/
 
 - **Source:** Jerber et al., *Population-scale single-cell RNA-seq profiling across dopaminergic
   neuron differentiation*, **Nature Genetics** 53(3):304–312 (2021).
-- **Accession:** ArrayExpress / INSDC — `PRJEB38269` / `ERP121676` *(confirm against the
-  publication before release)*.
+- **Open-access raw scRNA-seq:** European Nucleotide Archive (ENA) study **`ERP121676`**
+  (BioProject **`PRJEB38269`**) — <https://www.ebi.ac.uk/ena/browser/view/PRJEB38269>
+- **Controlled/managed access** (genotype-linked): European Genome–phenome Archive (EGA)
+  study `EGAS00001002885`, dataset `EGAD00001006157`.
+- **Processed per-timepoint counts** (`D11.h5`, `D30.h5`, `D52.h5`): Zenodo —
+  <https://zenodo.org/record/4333872>. These are the source of the pipeline's
+  `data/raw/dopaminergic_all_timepoints.h5`.
 - **Stages used:** day 11, day 30, day 52; untreated controls only (`treatment = NONE`).
 - **Pipeline input:** `data/raw/dopaminergic_all_timepoints.h5`, read directly by
   `run_multiseed.py`, `run_ablations.py`, `run_ode_fair.py`, and `run_sensitivity.py`.
