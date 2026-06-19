@@ -88,3 +88,6 @@ docs/.doctrees/
 
 # OS
 Thumbs.db
+
+# Local archive of superseded notes/scripts (kept locally, not published)
+archive/

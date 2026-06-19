@@ -1,209 +1,127 @@
-# Hybrid Physics-ML Digital Twin for Predicting Stem Cell Differentiation Dynamics
+# A Leakage-Safe Benchmark for Single-Cell Differentiation Forecasting
 
-A computational framework that integrates mechanistic ODE models with machine learning to predict induced pluripotent stem cell (iPSC) differentiation dynamics in real-time.
+A leakage-safe, multi-seed, equivalence-tested benchmark for **discrete-stage single-cell
+differentiation forecasting**. The repository accompanies the manuscript *"A Leakage-Safe
+Benchmark for Single-Cell Differentiation Forecasting"* (Kanu et al., under review at
+*BMC Bioinformatics*) and contains everything needed to regenerate every figure and table
+from per-seed result files.
 
-## 🎯 Project Overview
+## What this study found
 
-This project implements a **pure software digital twin** that:
-- Simulates iPSC differentiation dynamics using mechanistic models
-- Predicts differentiation outcomes using ML on single-cell RNA-seq data
-- Enables virtual experimentation and protocol optimization
-- Provides real-time state tracking and prediction
+Expressive temporal models (Transformers, neural ODEs, physics-informed networks) are
+increasingly used to "forecast" cell-differentiation state from cross-sectional scRNA-seq.
+Because no cell is observed at more than one timepoint, such forecasts are evaluated on
+**pseudo-trajectories** that concatenate *independently sampled* cells under a ground-truth
+stage order. Under a single leakage-safe protocol applied to two independent lineages
+(dopaminergic neuron and cardiomyocyte) over 20 seeds each:
 
-**Target Conference:** ICUFN (International Conference on Ubiquitous and Future Networks)
+- A Transformer is **statistically equivalent** to an eight-parameter linear (Ridge) model
+  and to a complexity-matched random forest, on both lineages (paired bootstrap CI within an
+  equivalence margin of |Δ| < 0.01).
+- A previously apparent **+19.4 % advantage was an artifact of train–test leakage**; it
+  inverts to −2 % once the split is corrected (Table 3).
+- **Shuffling stage order or removing positional encoding leaves accuracy unchanged** — the
+  sequence model extracts no temporal structure (Fig. 5).
+- **Fairer ODE calibration monotonically worsens** prediction (Fig. 6).
 
-## 🏗️ Architecture
+One mechanism explains all of it: pseudo-trajectories built from independently sampled cells
+contain no within-trajectory temporal dependency, so a memoryless predictor is optimal and
+added model capacity fits noise. The lasting contribution is the **evaluation protocol**, not
+any single model.
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                    Digital Twin Engine                   │
-├─────────────────────────────────────────────────────────┤
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  │
-│  │   Physical   │  │  Biological  │  │   ML-Based   │  │
-│  │  Simulator   │→ │    Models    │→ │  Predictors  │  │
-│  │  (ODE/SDE)   │  │    (GRN)     │  │ (LSTM/Trans) │  │
-│  └──────────────┘  └──────────────┘  └──────────────┘  │
-│         ↓                  ↓                  ↓          │
-│  ┌──────────────────────────────────────────────────┐  │
-│  │         State Estimation & Prediction            │  │
-│  └──────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────┘
-                           ↓
-              ┌────────────────────────┐
-              │  Visualization Layer   │
-              │  (Interactive Dashboard)│
-              └────────────────────────┘
-```
+## Repository map
 
-## 📁 Project Structure
+Each script reads/writes only `experiments/results/*.json`; **every reported number is
+generated programmatically — nothing is hand-entered.**
 
-```
-stem-cell-digital-twin/
-├── data/
-│   ├── raw/              # Original scRNA-seq datasets
-│   ├── processed/        # Preprocessed data
-│   └── simulated/        # Synthetic data from simulators
-├── models/
-│   ├── simulators/       # ODE/SDE cell models
-│   ├── digital_twin/     # Core digital twin engine
-│   ├── predictors/       # ML prediction models
-│   └── grn/              # Gene regulatory networks
-├── src/
-│   ├── data/             # Data loading and preprocessing
-│   ├── models/           # Model implementations
-│   ├── visualization/    # Dashboard and plotting
-│   └── utils/            # Helper functions
-├── experiments/
-│   ├── configs/          # Experiment configurations
-│   └── results/          # Experiment outputs
-├── notebooks/            # Jupyter notebooks for analysis
-├── tests/                # Unit tests
-└── docs/                 # Documentation
-```
+| Script | Produces | Paper artifact |
+|---|---|---|
+| `fair_comparison.py` | `results/fair_comparison_seed42.json` | **Table 3** — leakage demonstration & repair |
+| `run_multiseed.py` | `results/multiseed_n20.json` | **Fig. 3/4** — neural equivalence (20 seeds) |
+| `run_multiseed_cardio.py` | `results/multiseed_cardio_n20.json` | **Fig. 3/4** — cardiac replication |
+| `run_ablations.py` | `results/ablations_n20.json` | **Fig. 5** — stage-order shuffle & no-PE controls |
+| `run_ode_fair.py` | `results/ode_fair_n20.json` | **Fig. 6** — three-regime ODE calibration |
+| `run_sensitivity.py` | `results/sensitivity_{dopaminergic,cardio}_n20.json` | **Fig. 7 / S2** — 38-variant representation sweep |
+| `build_cardio_scores.py` | `data/processed/cardio_cell_scores.csv.gz`, `cardio_marker_log.npz` | cardiac marker-score extraction from GSE175634 |
+| `paper/figures/make_figures.py` | `paper/figures/*.{png,pdf}` | **all figures**, regenerated from `results/` |
 
-## 🚀 Quick Start
+Model implementations (Transformer, trainer, ODE simulator) live in `src/`; the manuscript and
+generated figures are in `paper/`.
 
-### Installation
+## Data availability
+
+The two datasets are **public and referenced, not redistributed** (raw counts are ~26 GB and
+are git-ignored). See [`data/README.md`](data/README.md) for exact accessions and download steps.
+
+- **Neural (dopaminergic):** Jerber et al. 2021, *Nature Genetics* — population-scale
+  iPSC→dopaminergic-neuron differentiation. The pipeline reads `data/raw/dopaminergic_all_timepoints.h5`.
+- **Cardiac (cardiomyocyte):** GEO accession **GSE175634** (Elorbany et al. 2022, *PLoS Genetics*).
+  Raw counts are reduced to marker scores by `build_cardio_scores.py`.
+
+The small **derived per-seed result files** (`experiments/results/*.json`) **are committed** —
+so you can regenerate every figure without re-running the full pipeline or downloading raw data.
+
+## Installation
+
+CPU-only; no GPU required.
 
 ```bash
-# Clone the repository (or navigate to project directory)
-cd stem-cell-digital-twin
-
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
 pip install -r requirements.txt
 ```
 
-### Basic Usage
+Core stack: Python 3.14, PyTorch (CPU), Scanpy, SciPy, scikit-learn, NumPy.
 
-```python
-from src.models.digital_twin import DigitalTwin
-from src.models.simulators import iPSCDifferentiationSimulator
+## Reproduce the results
 
-# Initialize simulator
-simulator = iPSCDifferentiationSimulator()
-
-# Create digital twin
-twin = DigitalTwin(simulator)
-
-# Run simulation
-results = twin.run_simulation(duration=14, timesteps=100)
-
-# Visualize
-twin.plot_trajectory()
-```
-
-### Run Dashboard
+**Fastest path — regenerate all figures from the committed results (no raw data needed):**
 
 ```bash
-streamlit run src/visualization/dashboard.py
+python paper/figures/make_figures.py    # writes paper/figures/*.{png,pdf}
 ```
 
-## 🔬 Key Features
-
-### 1. **Mechanistic Simulator**
-- ODE-based population dynamics
-- Stochastic single-cell behavior
-- Gene regulatory network modeling
-- Culture condition effects (nutrients, growth factors)
-
-### 2. **Data-Driven Models**
-- Train on public scRNA-seq datasets
-- Trajectory inference algorithms
-- Cell fate prediction
-- RNA velocity integration
-
-### 3. **Digital Twin Engine**
-- Real-time state estimation
-- Predictive forecasting (24-48h ahead)
-- Uncertainty quantification
-- Adaptive protocol recommendations
-
-### 4. **ML Predictors**
-- LSTM/Transformer for time-series
-- Graph Neural Networks for cell interactions
-- Variational Autoencoders for state space
-- Reinforcement Learning for optimization
-
-### 5. **Visualization**
-- Interactive dashboard (Streamlit)
-- Real-time simulation playback
-- 3D cell state space (UMAP/t-SNE)
-- Comparative analysis tools
-
-## 📊 Datasets
-
-We use publicly available single-cell RNA-seq datasets:
-- **CellxGene**: Curated stem cell datasets
-- **GEO**: Differentiation time-series
-- **Human Cell Atlas**: Developmental trajectories
-
-See `data/README.md` for dataset details and download instructions.
-
-## 🧪 Experiments
-
-Run predefined experiments:
+**Full path — regenerate the per-seed metrics, then the figures** (requires the raw datasets,
+see `data/README.md`):
 
 ```bash
-# Basic differentiation simulation
-python experiments/run_simulation.py --config configs/basic_diff.yaml
+# 1. (cardiac only) build marker scores from raw GSE175634 counts
+python build_cardio_scores.py
 
-# ML model training
-python experiments/train_predictor.py --config configs/lstm_config.yaml
+# 2. regenerate per-seed metrics (writes experiments/results/*.json)
+python run_multiseed.py --seeds 20
+python run_multiseed_cardio.py --seeds 20
+python run_ablations.py --seeds 20
+python run_ode_fair.py --seeds 20
+python run_sensitivity.py --dataset dopaminergic --seeds 20
+python run_sensitivity.py --dataset cardio --seeds 20
+python fair_comparison.py --seed 42        # Table 3 leakage demonstration
 
-# Virtual protocol optimization
-python experiments/optimize_protocol.py
+# 3. regenerate every figure from results/
+python paper/figures/make_figures.py
 ```
 
-## 📈 Results
+Each script accepts `--seeds` (default 20, except `run_sensitivity.py` which defaults to 10) and
+`--epochs`. A quick smoke run uses `--seeds 2` (matching the committed `*_n2.json` files).
 
-Results will be saved in `experiments/results/` including:
-- Simulation trajectories
-- Prediction accuracy metrics
-- Optimized protocols
-- Visualizations
+### Expected runtime & hardware
 
-## 🛠️ Technologies
+CPU-only on a laptop. Figure regeneration from committed JSON takes **seconds**. The full
+multi-seed pipeline (small Transformer, ~827K params; 200 pseudo-trajectories per seed) runs in
+well under an hour.
 
-- **Python 3.9+**
-- **Scientific Computing**: NumPy, SciPy, Pandas
-- **Machine Learning**: PyTorch, Scikit-learn
-- **Single-Cell Analysis**: Scanpy, AnnData, scVelo
-- **Visualization**: Matplotlib, Plotly, Streamlit
-- **Modeling**: PyDSTool (ODEs), Gillespie (stochastic)
+## Evaluation protocol (in one paragraph)
 
-## 📝 Citation
+For each seed: 200 stage-ordered pseudo-trajectories are assembled by sampling one cell
+independently per stage; a single 70/15/15 trajectory-level split is drawn and shared identically
+by every model; min–max normalization bounds are estimated on the **training partition only**.
+Each baseline is compared to the Transformer by the per-seed paired difference Δ = MAE_baseline −
+MAE_Transformer, summarized with a percentile paired-bootstrap 95 % CI (10⁴ resamples), a Wilcoxon
+signed-rank test, Cohen's dₓ, and Holm–Bonferroni correction. A CI bracketing zero inside the
+pre-specified margin |Δ| < 0.01 is read as **statistical equivalence**, not mere non-significance.
 
-If you use this work, please cite:
+## License & citation
 
-```bibtex
-@inproceedings{kanu2026digitaltwin,
-  title={Hybrid Physics-ML Digital Twin for Predicting Stem Cell Differentiation Dynamics},
-  author={Kanu, Xavier},
-  booktitle={International Conference on Ubiquitous and Future Networks (ICUFN)},
-  year={2026}
-}
-```
+Released under the **MIT License** (see [`LICENSE`](LICENSE)).
 
-## 🤝 Contributing
-
-Contributions welcome! Please see `CONTRIBUTING.md` for guidelines.
-
-## 📄 License
-
-MIT License - see `LICENSE` file for details.
-
-## 📧 Contact
-
-Xavier Kanu - [@kanuxvi](https://twitter.com/kanuxvi)
-
-Project Link: [https://github.com/xaviwho/stem-cell-digital-twin](https://github.com/xaviwho/stem-cell-digital-twin)
-
----
-
-**Status:** 🚧 Under Active Development
-
-**Last Updated:** February 2026
+If you use this benchmark, please cite the manuscript (Kanu et al., *A Leakage-Safe Benchmark for
+Single-Cell Differentiation Forecasting*, under review at *BMC Bioinformatics*, 2026). A
+`CITATION.cff` will be added once the DOI is assigned.

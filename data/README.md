@@ -1,191 +1,62 @@
-# Data Directory
+# Data
 
-This directory contains datasets for training and validating the digital twin models.
-
-## Directory Structure
+The two datasets analysed in this study are **public** and are **referenced, not redistributed**.
+Raw single-cell counts are large (~26 GB total) and are **git-ignored** — obtain them from the
+accessions below. The small derived inputs the pipeline actually consumes are kept under
+`data/processed/`.
 
 ```
 data/
-├── raw/          # Original, unprocessed datasets
-├── processed/    # Preprocessed and cleaned datasets
-└── simulated/    # Synthetic data from simulators
+├── raw/         # public raw counts — NOT committed (git-ignored); download per below
+└── processed/   # small derived inputs consumed by the pipeline (committed)
 ```
 
-## Recommended Datasets
+## 1. Neural (dopaminergic) lineage
 
-### 1. Single-Cell RNA-seq Datasets
+- **Source:** Jerber et al., *Population-scale single-cell RNA-seq profiling across dopaminergic
+  neuron differentiation*, **Nature Genetics** 53(3):304–312 (2021).
+- **Accession:** ArrayExpress / INSDC — `PRJEB38269` / `ERP121676` *(confirm against the
+  publication before release)*.
+- **Stages used:** day 11, day 30, day 52; untreated controls only (`treatment = NONE`).
+- **Pipeline input:** `data/raw/dopaminergic_all_timepoints.h5`, read directly by
+  `run_multiseed.py`, `run_ablations.py`, `run_ode_fair.py`, and `run_sensitivity.py`.
 
-#### CellxGene (Curated Stem Cell Data)
-- **Source**: https://cellxgene.cziscience.com/
-- **Search for**: "iPSC differentiation", "pluripotent stem cells"
-- **File format**: .h5ad (AnnData)
-- **Usage**: Training trajectory prediction models
+## 2. Cardiac (cardiomyocyte) lineage
 
-**Recommended collections:**
-- Human iPSC differentiation time-series
-- Embryonic stem cell developmental trajectories
-- Differentiation to specific lineages (cardiac, neural, hepatic)
+- **Source:** Elorbany et al., *Single-cell sequencing reveals lineage-specific dynamic genetic
+  regulation of gene expression during human cardiomyocyte differentiation*, **PLoS Genetics**
+  18(1):e1009666 (2022).
+- **Accession:** GEO **GSE175634** —
+  <https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE175634>
+- **Download** the supplementary files into `data/raw/cardio_gse175634/`:
+  `GSE175634_cell_counts.mtx.gz`, `GSE175634_cell_metadata.tsv.gz`,
+  `GSE175634_cell_indices.tsv.gz`, `GSE175634_gene_indices_counts.tsv.gz`.
+- **Build the marker-score inputs** (a single streaming pass over the counts matrix):
 
-#### GEO (Gene Expression Omnibus)
-- **Source**: https://www.ncbi.nlm.nih.gov/geo/
-- **Search terms**:
-  - "iPSC differentiation scRNA-seq"
-  - "pluripotent stem cell time course"
-  - "directed differentiation single cell"
+  ```bash
+  python build_cardio_scores.py
+  ```
 
-**Example datasets:**
-- GSE75748 - Human iPSC to definitive endoderm
-- GSE122662 - iPSC cardiac differentiation
-- GSE134355 - Neural differentiation time-course
+  This writes `data/processed/cardio_cell_scores.csv.gz` and `data/processed/cardio_marker_log.npz`,
+  consumed by `run_multiseed_cardio.py`, `run_ablations.py`, `run_ode_fair.py`, and
+  `run_sensitivity.py --dataset cardio`.
 
-#### Human Cell Atlas
-- **Source**: https://www.humancellatlas.org/
-- **Focus**: Developmental biology datasets
-- **File format**: Various (.h5ad, .loom, .h5)
+## State construction
 
-### 2. Bulk RNA-seq Datasets
+For each cell, raw counts are library-size normalized to 10,000 (CP10K) and log-transformed;
+two state scores are the per-panel means of the log-normalized expression of a pluripotency panel
+(P) and a lineage-differentiation panel (D). Each score is min–max scaled to [0, 1] using bounds
+estimated **on the training partition only** (leakage-safe), then clipped. Marker panels and the
+full procedure are given in §2.1–2.2 of the manuscript.
 
-For validating population-level predictions:
-- **ArrayExpress**: https://www.ebi.ac.uk/arrayexpress/
-- **Search**: "stem cell differentiation time series"
+## Reproducing figures without raw data
 
-### 3. Proteomic Data
-
-For multi-omics integration:
-- **PRIDE Archive**: https://www.ebi.ac.uk/pride/
-- **Search**: "stem cell differentiation proteomics"
-
-## Data Download Instructions
-
-### Option 1: Manual Download
-
-1. Visit the data source (e.g., CellxGene, GEO)
-2. Search for relevant datasets
-3. Download to `data/raw/`
-4. Run preprocessing scripts in `notebooks/`
-
-### Option 2: Programmatic Download
-
-```python
-# Example: Download from CellxGene
-import cellxgene_census
-import anndata
-
-# Load dataset
-adata = cellxgene_census.download_dataset("dataset_id")
-
-# Save to raw directory
-adata.write("data/raw/dataset_name.h5ad")
-```
-
-### Option 3: Use Simulation Data
-
-For initial development and testing, use the simulator to generate synthetic data:
-
-```python
-from src.models.simulators import iPSCDifferentiationSimulator
-import numpy as np
-
-# Generate training data
-simulator = iPSCDifferentiationSimulator()
-
-# Multiple runs with different parameters
-datasets = []
-for i in range(100):
-    # Randomize parameters
-    growth_factors = {
-        'fgf2': np.random.uniform(0, 1),
-        'retinoic_acid': np.random.uniform(0, 1)
-    }
-
-    time, states = simulator.run_simulation(
-        duration=14,
-        timesteps=100,
-        growth_factors=growth_factors
-    )
-
-    datasets.append({'time': time, 'states': states, 'gf': growth_factors})
-
-# Save
-import pickle
-with open('data/simulated/training_data.pkl', 'wb') as f:
-    pickle.dump(datasets, f)
-```
-
-## Data Preprocessing
-
-Once downloaded, preprocess data using:
+The committed per-seed result files in `experiments/results/*.json` let you regenerate every
+figure without downloading any raw data:
 
 ```bash
-# From project root
-python src/data/preprocess.py --input data/raw/ --output data/processed/
+python paper/figures/make_figures.py
 ```
 
-Or use the provided Jupyter notebooks:
-- `notebooks/01_data_exploration.ipynb`
-- `notebooks/02_data_preprocessing.ipynb`
-
-## Data Format
-
-### Expected Format for Training
-
-Processed data should be in AnnData format (.h5ad) with:
-
-**Observations (cells):**
-- `obs['timepoint']`: Time point in hours/days
-- `obs['condition']`: Culture condition
-- `obs['cell_type']`: Cell type annotation (if available)
-- `obs['pluripotency_score']`: Computed pluripotency score
-- `obs['differentiation_score']`: Computed differentiation score
-
-**Variables (genes):**
-- Gene expression matrix in `adata.X`
-- Normalized and log-transformed
-
-**Metadata:**
-- `adata.uns['protocol']`: Differentiation protocol details
-- `adata.uns['growth_factors']`: Growth factor concentrations
-
-## Example Data Loading
-
-```python
-import anndata
-import scanpy as sc
-
-# Load preprocessed data
-adata = anndata.read_h5ad('data/processed/ipsc_diff_timecourse.h5ad')
-
-# Quick exploration
-print(f"Cells: {adata.n_obs}, Genes: {adata.n_vars}")
-print(f"Timepoints: {adata.obs['timepoint'].unique()}")
-
-# Visualize
-sc.pl.umap(adata, color=['timepoint', 'pluripotency_score'])
-```
-
-## Citation
-
-When using public datasets, please cite the original publications. Citations can be found:
-- In the dataset metadata
-- On the source database webpage
-- In the `data/citations.txt` file
-
-## Data Privacy & Ethics
-
-- Only use publicly available datasets or datasets with proper permissions
-- Follow data use agreements and licenses
-- For clinical data, ensure proper de-identification and IRB approval
-- Do not include any private or sensitive data in this repository
-
-## Need Help?
-
-See `notebooks/00_data_guide.ipynb` for detailed tutorials on:
-- Finding relevant datasets
-- Downloading and loading data
-- Preprocessing pipelines
-- Quality control
-- Data integration
-
----
-
-**Last Updated**: February 2026
+No new sequencing data were generated in this study. When using these datasets, cite the original
+publications above.
