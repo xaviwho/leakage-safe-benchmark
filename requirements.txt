@@ -16,6 +16,9 @@ scanpy==1.12.1
 anndata==0.12.11
 h5py==3.16.0
 
+# Optimal-transport couplings (positive controls)
+pot==0.9.7.post1
+
 # Figures
 matplotlib==3.10.8
 

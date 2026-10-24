@@ -35,7 +35,7 @@ SINGLE, ONEHALF, DOUBLE = 86 * MM, 130 * MM, 178 * MM
 # House style
 # ----------------------------------------------------------------------------- #
 COL = dict(Transformer="#3B4CC0", Ridge="#5A6B7B", RandomForest="#E08214",
-           ODE="#7D8C7A")
+           ODE="#7D8C7A", Constant="#6A3D9A")
 COL["RF"] = COL["RandomForest"]
 LIN_MARK = {"neural": "o", "cardiac": "s"}          # lineage by shape, never color
 ZERO = "#1A1A1A"
@@ -87,13 +87,22 @@ def panel_letter(ax, s, dx=-0.16, dy=1.04):
 # ----------------------------------------------------------------------------- #
 # Fig 2 - headline forest plot
 # ----------------------------------------------------------------------------- #
+def const_vs_tf(fn):
+    """Constant - Transformer, flipped from the stored Transformer - Constant comparison."""
+    st = L(fn)["paired_vs_constant"]["Transformer"]
+    return dict(mean_diff=-st["mean_diff"], ci=(-st["ci"][1], -st["ci"][0]),
+                dz=-st["dz"], wilcoxon_p_holm=st["wilcoxon_p_holm"])
+
+
 def fig2():
     neu = L("multiseed_n20.json")["paired_vs_transformer"]
     car = L("multiseed_cardio_n20.json")["paired_vs_transformer"]
     # rows top->bottom; group by lineage
     rows = [
+        ("cardiac", "Constant", const_vs_tf("constant_baseline_cardio_n20.json")),
         ("cardiac", "RandomForest", car["RandomForest"]),
         ("cardiac", "Ridge", car["Ridge"]),
+        ("neural", "Constant", const_vs_tf("constant_baseline_dopaminergic_n20.json")),
         ("neural", "RandomForest", neu["RandomForest"]),
         ("neural", "Ridge", neu["Ridge"]),
     ]
@@ -111,20 +120,22 @@ def fig2():
         for x in (lo, hi):
             ax.plot([x, x], [y - 0.12, y + 0.12], color=c, lw=0.9, zorder=3)
         ax.plot(m, y, LIN_MARK[lin], color=c, ms=5, mec="white", mew=0.7, zorder=4)
-        ax.text(0.985, y, f"$d_z$={st['dz']:+.2f}   p={st['wilcoxon_p_holm']:.3f}",
+        p = st["wilcoxon_p_holm"]
+        ptxt = "p<0.001" if p < 0.001 else f"p={p:.3f}"
+        ax.text(0.985, y, f"$d_z$={st['dz']:+.2f}   {ptxt}",
                 transform=ytrans, fontsize=6.3, va="center", ha="right", color="#333")
 
     ax.set_yticks(range(len(rows)))
     ax.set_yticklabels([f"{m} vs TF" for _, m, _ in rows])
     ax.set_ylim(-0.85, len(rows) - 0.4)
-    ax.set_xlim(-0.014, 0.027)
+    ax.set_xlim(-0.034, 0.027)
     ax.set_xlabel(r"paired $\Delta$MAE  =  MAE(baseline) $-$ MAE(Transformer)")
-    ax.set_xticks([-0.01, 0.0, 0.01, 0.02])
+    ax.set_xticks([-0.03, -0.02, -0.01, 0.0, 0.01, 0.02])
     # lineage separators / labels
-    ax.axhline(1.5, color="#CCC", lw=0.5)
-    ax.text(-0.0128, 0.5, "Cardiac", rotation=90, va="center", ha="center",
+    ax.axhline(2.5, color="#CCC", lw=0.5)
+    ax.text(-0.0325, 1.0, "Cardiac", rotation=90, va="center", ha="center",
             fontsize=6.5, color="#555", fontstyle="italic")
-    ax.text(-0.0128, 2.5, "Neural", rotation=90, va="center", ha="center",
+    ax.text(-0.0325, 4.0, "Neural", rotation=90, va="center", ha="center",
             fontsize=6.5, color="#555", fontstyle="italic")
     ax.text(-0.0009, -0.75, r"$\leftarrow$ Transformer better", fontsize=6.3,
             ha="right", color="#777")
@@ -161,15 +172,17 @@ def raincloud_panel(ax, per_seed, models, rng):
                                alpha=0.85, edgecolor="none", zorder=4))
         ax.plot([i - 0.16, i + 0.34], [d.mean(), d.mean()], color=c, lw=1.0, zorder=5)
     ax.set_xticks(range(len(models)))
-    ax.set_xticklabels(["Ridge", "RF", "Transformer"])
+    ax.set_xticklabels([dict(RandomForest="RF").get(m, m) for m in models])
     ax.set_xlim(-0.4, len(models) - 0.4)
     finish(ax)
 
 
 def fig3():
-    neu = L("multiseed_n20.json")["per_seed"]
-    car = L("multiseed_cardio_n20.json")["per_seed"]
-    models = ["Ridge", "RandomForest", "Transformer"]
+    neu = dict(L("multiseed_n20.json")["per_seed"],
+               Constant=L("constant_baseline_dopaminergic_n20.json")["per_seed"]["Constant"])
+    car = dict(L("multiseed_cardio_n20.json")["per_seed"],
+               Constant=L("constant_baseline_cardio_n20.json")["per_seed"]["Constant"])
+    models = ["Constant", "Ridge", "RandomForest", "Transformer"]
     rng = np.random.default_rng(0)
     fig, axes = plt.subplots(1, 2, figsize=(DOUBLE, 0.62 * SINGLE * 2 / 1.6))
     for ax, ps, ttl, lab in zip(axes, (neu, car), ("Neural (dopaminergic)", "Cardiac (GSE175634)"), "AB"):
@@ -326,6 +339,79 @@ def figS2():
 # ----------------------------------------------------------------------------- #
 # Fig 1 (bottom) - leakage-contrast (data-driven draft for vector refinement)
 # ----------------------------------------------------------------------------- #
+def fig7_positive():
+    """Positive controls: simulated SDE (A) and OT-coupled real data (B)."""
+    models = ["Constant", "Ridge", "RandomForest", "Transformer"]
+    cons = ["true", "independent", "ot"]
+    con_lab = {"true": "true\ncoupling", "independent": "independent\npairing",
+               "ot": "OT\ncoupling"}
+    fig, (axA, axB) = plt.subplots(1, 2, figsize=(DOUBLE, 0.95 * SINGLE),
+                                   gridspec_kw=dict(width_ratios=[1, 1.25]))
+    # A: simulation, scored on held-out TRUE trajectories
+    off = np.linspace(-0.27, 0.27, len(models))
+    for n, filled in (("200", True), ("2000", False)):
+        fn = R / f"positive_control_sim_n{n}.json"
+        if not fn.exists():
+            continue
+        S = json.loads(fn.read_text())["summary"]
+        for j, m in enumerate(models):
+            for i, c in enumerate(cons):
+                a = S[c]["true_test"]["aggregate"][m]
+                x = i + off[j] + (0.0 if filled else 0.05)
+                axA.errorbar(x, a["mean"], yerr=a["std"], fmt="o", ms=3.6, lw=0.8,
+                             color=COL[m], mfc=COL[m] if filled else "white", mew=0.8,
+                             capsize=0, zorder=3)
+    axA.set_xticks(range(len(cons)))
+    axA.set_xticklabels([con_lab[c] for c in cons])
+    axA.set_ylabel("MAE on held-out true trajectories")
+    axA.set_title("Simulated SDE", fontsize=8)
+    panel_letter(axA, "A")
+    finish(axA)
+
+    # B: real data, model - training-mean constant (the loss-matched, input-free optimum)
+    # under each coupling: negative values mean the model extracts information from inputs
+    rows = []
+    for lin, key in (("cardiac", "cardio"), ("neural", "dopaminergic")):
+        for c in ("ot", "independent"):
+            for m in ("Transformer", "RandomForest", "Ridge"):
+                rows.append((lin, key, c, m))
+    axB.axvline(0, color=ZERO, lw=0.8, ls=(0, (4, 3)), zorder=1)
+    axB.axvspan(-EQ_MARGIN, EQ_MARGIN, color=EQ_TINT, alpha=0.06, lw=0)
+    for y, (lin, key, c, m) in enumerate(rows):
+        for n, filled, dy in (("200", True, 0.13), ("2000", False, -0.13)):
+            fn = R / f"ot_coupling_{key}_n{n}.json"
+            if not fn.exists():
+                continue
+            st = json.loads(fn.read_text())["summary"][c]["paired_vs_constant_mean"][m]
+            lo, hi = st["ci"]
+            axB.plot([lo, hi], [y + dy] * 2, color=COL[m], lw=0.9, zorder=2)
+            axB.plot(st["mean_diff"], y + dy, LIN_MARK[lin], color=COL[m], ms=3.8,
+                     mfc=COL[m] if filled else "white", mew=0.8, zorder=3)
+    axB.set_yticks(range(len(rows)))
+    axB.set_yticklabels([f"{dict(RandomForest='RF').get(m, m)} ({'OT' if c == 'ot' else 'indep.'})"
+                         for _, _, c, m in rows], fontsize=6.3)
+    for b in (2.5, 8.5):
+        axB.axhline(b, color="#EEE", lw=0.5)
+    axB.axhline(5.5, color="#BBB", lw=0.6)
+    axB.text(1.0, 2.5, "Cardiac", transform=axB.get_yaxis_transform(), rotation=270,
+             va="center", ha="left", fontsize=6.5, color="#555", fontstyle="italic")
+    axB.text(1.0, 8.5, "Neural", transform=axB.get_yaxis_transform(), rotation=270,
+             va="center", ha="left", fontsize=6.5, color="#555", fontstyle="italic")
+    axB.invert_yaxis()
+    axB.set_xlabel("paired $\\Delta$MAE  =  MAE(model) $-$\nMAE(training-mean constant)")
+    axB.set_xticks([-0.02, -0.01, 0.0, 0.01])
+    axB.set_title("Real data: OT vs. independent coupling", fontsize=8)
+    panel_letter(axB, "B", dx=-0.32)
+    finish(axB)
+    handles = [Line2D([0], [0], marker="o", color="#555", mfc="#555", lw=0, label="N = 200"),
+               Line2D([0], [0], marker="o", color="#555", mfc="white", lw=0, label="N = 2,000")]
+    handles += [Line2D([0], [0], marker="o", color=COL[m], lw=0,
+                       label=dict(RandomForest="RF").get(m, m)) for m in models]
+    fig.legend(handles=handles, loc="lower center", ncol=6, bbox_to_anchor=(0.5, -0.06))
+    fig.subplots_adjust(wspace=0.5, bottom=0.2)
+    save(fig, "fig7_positive")
+
+
 def fig1_leakage():
     # reconstruct the original (leaky) vs corrected index layout, seed 42
     n = 200; n_tr, n_va = 140, 30
@@ -387,6 +473,7 @@ def main():
     fig4()
     fig5()
     fig6()
+    fig7_positive()
     figS2()
     print("\nAll figures written to paper/figures/ (PDF + PNG).")
 

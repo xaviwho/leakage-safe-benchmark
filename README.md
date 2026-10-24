@@ -43,6 +43,10 @@ generated programmatically — nothing is hand-entered.**
 | `run_ode_fair.py` | `results/ode_fair_n20.json` | **Fig. 6** — three-regime ODE calibration |
 | `run_sensitivity.py` | `results/sensitivity_{dopaminergic,cardio}_n20.json` | **Fig. 7 / S2** — 38-variant representation sweep |
 | `run_constant_baseline.py` | `results/constant_baseline_{dopaminergic,cardio}_n20.json` | **Table 4** — constant marginal-median baseline (analytical null) |
+| `run_positive_control_sim.py` | `results/positive_control_sim_n{200,2000}.json` | **Fig. 8A** — positive control on a simulated SDE (true / independent / OT coupling) |
+| `extract_ot_features.py` | `data/processed/{dopaminergic,cardio}_ot_features.npz` | whole-transcriptome PCA for OT couplings (requires raw data) |
+| `run_ot_coupling.py` | `results/ot_coupling_{dopaminergic,cardio}_n{200,2000}.json` | **Fig. 8B** — positive control on real data re-linked by OT |
+| `coupling_protocol.py` | — | shared protocol for the positive controls; `python coupling_protocol.py <json>` re-summarizes saved results |
 | `build_cardio_scores.py` | `data/processed/cardio_cell_scores.csv.gz`, `cardio_marker_log.npz` | cardiac marker-score extraction from GSE175634 |
 | `paper/figures/make_figures.py` | `paper/figures/*.{png,pdf}` | **all figures**, regenerated from `results/` |
 
