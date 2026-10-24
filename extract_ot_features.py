@@ -1,9 +1,9 @@
 """
-Positive control (real data), step 1: whole-transcriptome features for OT couplings.
+Positive control (real data), step 1: transcriptome-wide features for OT couplings.
 
 Optimal-transport trajectory inference (Waddington-OT; Schiebinger et al. 2019) couples
-cells between consecutive time points in a low-dimensional embedding of the FULL
-transcriptome. Coupling in the 2D (P, D) marker space instead would make any induced
+cells between consecutive time points in a low-dimensional, transcriptome-wide
+expression embedding (here: PCA of 2,000 highly variable genes). Coupling in the 2D (P, D) marker space instead would make any induced
 temporal dependence circular, since the targets are built from those markers.
 
 For each lineage we draw a fixed subsample of cells per stage (seed 0) and store:

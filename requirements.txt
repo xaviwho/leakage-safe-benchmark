@@ -1,5 +1,6 @@
-# Pinned dependencies for the leakage-safe benchmark (Python 3.14, CPU-only).
-# Versions reflect the environment used to produce the committed results/ and figures.
+# Pinned dependencies for the leakage-safe benchmark (CPU-only).
+# Original analyses were run with Python 3.14; the constant-baseline and positive-control
+# analyses (and figures) with Python 3.12.10, both using these versions (+ POT for 3.12).
 # Install with:  pip install -r requirements.txt
 
 # Core scientific computing

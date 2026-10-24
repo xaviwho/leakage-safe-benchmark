@@ -19,10 +19,10 @@ stage order. Under a single leakage-safe protocol applied to two independent lin
   and to a complexity-matched random forest, on both lineages (paired bootstrap CI within an
   equivalence margin of |Δ| < 0.01).
 - A previously apparent **+19.4 % advantage was an artifact of train–test leakage**; it
-  inverts to −2 % once the split is corrected (Table 3).
+  inverts to −2 % once the split is corrected (Table 4, Fig. A1).
 - **Shuffling stage order or removing positional encoding leaves accuracy unchanged** — the
-  sequence model extracts no temporal structure (Fig. 5).
-- **Fairer ODE calibration monotonically worsens** prediction (Fig. 6).
+  sequence model does not rely on input order (Fig. 4); the simulation shows this control is insensitive on its own.
+- **Fairer ODE calibration monotonically worsens** prediction (Fig. 5).
 
 One mechanism explains all of it: pseudo-trajectories built from independently sampled cells
 contain no within-trajectory temporal dependency, so a memoryless predictor is optimal and
@@ -36,16 +36,16 @@ generated programmatically — nothing is hand-entered.**
 
 | Script | Produces | Paper artifact |
 |---|---|---|
-| `fair_comparison.py` | `results/fair_comparison_seed42.json` | **Table 3** — leakage demonstration & repair |
-| `run_multiseed.py` | `results/multiseed_n20.json` | **Fig. 3/4** — neural equivalence (20 seeds) |
-| `run_multiseed_cardio.py` | `results/multiseed_cardio_n20.json` | **Fig. 3/4** — cardiac replication |
-| `run_ablations.py` | `results/ablations_n20.json` | **Fig. 5** — stage-order shuffle & no-PE controls |
-| `run_ode_fair.py` | `results/ode_fair_n20.json` | **Fig. 6** — three-regime ODE calibration |
-| `run_sensitivity.py` | `results/sensitivity_{dopaminergic,cardio}_n20.json` | **Fig. 7 / S2** — 38-variant representation sweep |
-| `run_constant_baseline.py` | `results/constant_baseline_{dopaminergic,cardio}_n20.json` | **Table 4** — constant marginal-median baseline (analytical null) |
-| `run_positive_control_sim.py` | `results/positive_control_sim_n{200,2000}.json` | **Fig. 8A** — positive control on a simulated SDE (true / independent / OT coupling) |
-| `extract_ot_features.py` | `data/processed/{dopaminergic,cardio}_ot_features.npz` | whole-transcriptome PCA for OT couplings (requires raw data) |
-| `run_ot_coupling.py` | `results/ot_coupling_{dopaminergic,cardio}_n{200,2000}.json` | **Fig. 8B** — positive control on real data re-linked by OT |
+| `fair_comparison.py` | `results/fair_comparison_seed42.json` | **Table 4, Fig. A1** — leakage case study |
+| `run_multiseed.py` | `results/multiseed_n20.json` | **Figs. 2–3** — neural equivalence (20 seeds) |
+| `run_multiseed_cardio.py` | `results/multiseed_cardio_n20.json` | **Figs. 2–3** — cardiac replication |
+| `run_ablations.py` | `results/ablations_n20.json` | **Fig. 4** — stage-order shuffle & no-PE controls |
+| `run_ode_fair.py` | `results/ode_fair_n20.json` | **Fig. 5** — three-regime ODE calibration |
+| `run_sensitivity.py` | `results/sensitivity_{dopaminergic,cardio}_n20.json` | **Fig. 6 / S2** — 38-variant representation sweep |
+| `run_constant_baseline.py` | `results/constant_baseline_{dopaminergic,cardio}_n20.json` | **Table 3, Figs. 2–3** — constant training-median baseline (analytical null) |
+| `run_positive_control_sim.py` | `results/positive_control_sim_n{200,2000}.json` | **Fig. 7A** — positive control on a simulated SDE (true / independent / OT coupling) |
+| `extract_ot_features.py` | `data/processed/{dopaminergic,cardio}_ot_features.npz` | transcriptome-wide PCA (2,000 HVGs) for OT couplings (requires raw data) |
+| `run_ot_coupling.py` | `results/ot_coupling_{dopaminergic,cardio}_n{200,2000}.json` | **Fig. 7B** — positive control on real data re-linked by OT |
 | `coupling_protocol.py` | — | shared protocol for the positive controls; `python coupling_protocol.py <json>` re-summarizes saved results |
 | `build_cardio_scores.py` | `data/processed/cardio_cell_scores.csv.gz`, `cardio_marker_log.npz` | cardiac marker-score extraction from GSE175634 |
 | `paper/figures/make_figures.py` | `paper/figures/*.{png,pdf}` | **all figures**, regenerated from `results/` |
@@ -98,7 +98,7 @@ python run_ablations.py --seeds 20
 python run_ode_fair.py --seeds 20
 python run_sensitivity.py --dataset dopaminergic --seeds 20
 python run_sensitivity.py --dataset cardio --seeds 20
-python fair_comparison.py --seed 42        # Table 3 leakage demonstration
+python fair_comparison.py --seed 42        # Table 4 leakage case study
 
 # 3. regenerate every figure from results/
 python paper/figures/make_figures.py

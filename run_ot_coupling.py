@@ -2,7 +2,7 @@
 Positive control (real data): rebuild pseudo-trajectories with optimal-transport couplings
 instead of independent pairing, and rerun the identical protocol.
 
-Couplings are computed Waddington-OT style in a 30-component PCA of the whole transcriptome
+Couplings are computed Waddington-OT style in a 30-component PCA of 2,000 highly variable genes
 (extract_ot_features.py), with squared-Euclidean cost normalized by its median and entropic
 regularization eps = 0.05. Per seed, 2,000 cells per stage are drawn from the stored
 4,000-cell subsample, the t0->t1 and t1->t2 plans are computed, and trajectories are
