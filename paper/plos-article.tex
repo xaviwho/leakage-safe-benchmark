@@ -1,0 +1,741 @@
+% Template for PLoS
+% Version 3.8 Apr 2026
+%
+% Converted from sn-article.tex (Springer Nature sn-jnl) to the PLOS
+% LaTeX template for submission to PLOS Computational Biology.
+%
+% % % % % % % % % % % % % % % % % % % % % %
+%
+% -- IMPORTANT NOTE
+%
+% This template contains comments intended
+% to minimize problems and delays during our production
+% process. Please follow the template instructions
+% whenever possible.
+%
+% % % % % % % % % % % % % % % % % % % % % % %
+%
+% Once your paper is accepted for publication,
+% PLEASE REMOVE ALL TRACKED CHANGES in this file
+% and leave only the final text of your manuscript.
+% PLOS recommends the use of latexdiff to track changes during review, as this will help to maintain a clean tex file.
+% Visit https://www.ctan.org/pkg/latexdiff?lang=en for info.
+%
+% There are no restrictions on package use within the LaTeX files except that no packages listed in the template may be deleted.
+%
+% Please do not include colors or graphics in the text.
+%
+% The manuscript LaTeX source should be contained within a single file (do not use \input, \externaldocument, or similar commands).
+%
+% % % % % % % % % % % % % % % % % % % % % % %
+%
+% -- FIGURES AND TABLES
+%
+% Please include tables/figure captions directly after the paragraph where they are first cited in the text.
+%
+% DO NOT INCLUDE GRAPHICS IN YOUR MANUSCRIPT
+% - Figures should be uploaded separately from your manuscript file.
+% - Figures containing multiple panels/subfigures must be combined into one image file before submission.
+% For figure citations, please use "Fig" instead of "Figure".
+% See http://journals.plos.org/plosone/s/figures for PLOS figure guidelines.
+%
+% Figure files to upload (renamed to PLOS order; PLOS requires TIFF or EPS):
+%   Fig1 <- figures/method_design.png
+%   Fig2 <- figures/fig3_raincloud
+%   Fig3 <- figures/fig2_forest
+%   Fig4 <- figures/fig4_temporal
+%   Fig5 <- figures/fig5_ode
+%   Fig6 <- figures/fig6_sensitivity
+%   Fig7 <- figures/fig7_positive
+%   Fig8 <- figures/fig1_leakage_panel
+%
+% % % % % % % % % % % % % % % % % % % % % % % %
+
+\documentclass[10pt,letterpaper]{article}
+\usepackage[top=0.85in,left=2.75in,footskip=0.75in]{geometry}
+
+% amsmath and amssymb packages, useful for mathematical formulas and symbols
+\usepackage{amsmath,amssymb}
+
+% Use adjustwidth environment to exceed column width (see example table in text)
+\usepackage{changepage}
+
+% textcomp package and marvosym package for additional characters
+\usepackage{textcomp,marvosym}
+
+% cite package, to clean up citations in the main text. Do not remove.
+\usepackage{cite}
+
+% Use nameref to cite supporting information files (see Supporting Information section for more info)
+\usepackage{nameref,hyperref}
+
+% line numbers
+\usepackage[right]{lineno}
+
+% ligatures disabled
+\usepackage[nopatch=eqnum]{microtype}
+\DisableLigatures[f]{encoding = *, family = * }
+
+% color can be used to apply background shading to table cells only
+\usepackage[table]{xcolor}
+
+% array package and thick rules for tables
+\usepackage{array}
+
+% create "+" rule type for thick vertical lines
+\newcolumntype{+}{!{\vrule width 2pt}}
+
+% create \thickcline for thick horizontal lines of variable length
+\newlength\savedwidth
+\newcommand\thickcline[1]{%
+  \noalign{\global\savedwidth\arrayrulewidth\global\arrayrulewidth 2pt}%
+  \cline{#1}%
+  \noalign{\vskip\arrayrulewidth}%
+  \noalign{\global\arrayrulewidth\savedwidth}%
+}
+
+% \thickhline command for thick horizontal lines that span the table
+\newcommand\thickhline{\noalign{\global\savedwidth\arrayrulewidth\global\arrayrulewidth 2pt}%
+\hline
+\noalign{\global\arrayrulewidth\savedwidth}}
+
+
+% Remove comment for double spacing
+%\usepackage{setspace}
+%\doublespacing
+
+% Text layout
+\raggedright
+\setlength{\parindent}{0.5cm}
+\textwidth 5.25in
+\textheight 8.75in
+
+% Bold the 'Figure #' in the caption and separate it from the title/caption with a period
+% Captions will be left justified
+\usepackage[aboveskip=1pt,labelfont=bf,labelsep=period,justification=raggedright,singlelinecheck=off]{caption}
+\renewcommand{\figurename}{Fig}
+
+% Please use the included `plos2025.bst` as your BibTeX style
+\bibliographystyle{plos2025}
+
+% Remove brackets from numbering in List of References
+\makeatletter
+\renewcommand{\@biblabel}[1]{\quad#1.}
+\makeatother
+
+
+
+% Header and Footer with logo
+\usepackage{lastpage,fancyhdr,graphicx}
+\usepackage{epstopdf}
+%\pagestyle{myheadings}
+\pagestyle{fancy}
+\fancyhf{}
+%\setlength{\headheight}{27.023pt}
+%\lhead{\includegraphics[width=2.0in]{PLOS-submission.eps}}
+\rfoot{\thepage/\pageref{LastPage}}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrule}{\hrule height 2pt \vspace{2mm}}
+\fancyheadoffset[L]{2.25in}
+\fancyfootoffset[L]{2.25in}
+\lfoot{\today}
+
+%% Include all user-defined macros below
+
+% Packages carried over from the original manuscript
+\usepackage{amsthm}
+\usepackage[ruled,linesnumbered]{algorithm2e}
+
+\newtheorem{proposition}{Proposition}
+
+%% END MACROS SECTION
+
+
+\begin{document}
+\vspace*{0.2in}
+
+% Title must be 250 characters or less.
+\begin{flushleft}
+{\Large
+\textbf{Benchmarking single-cell marker-state forecasting under independent and coupled cell pairings}
+}
+\newline
+% Insert author names, affiliations and corresponding author email (do not include titles, positions, or degrees).
+\\
+Victor Ikenna Kanu\textsuperscript{1\Yinyang},
+Ihunanya Udodiri Ajakwe\textsuperscript{1\Yinyang},
+Josiah Ayoola Isong\textsuperscript{1\Yinyang},
+Simeon Okechukwu Ajakwe\textsuperscript{2\Yinyang},
+Dong-Seong Kim\textsuperscript{1\Yinyang*}
+\\
+\bigskip
+\textbf{1} IT Convergence Engineering, Kumoh National Institute of Technology, Gumi 39177, South Korea
+\\
+\textbf{2} Smart Computing Department, Kyungdong University, Global Campus, South Korea
+\\
+\bigskip
+
+% Primary Equal Contribution Note
+\Yinyang These authors contributed equally to this work.
+
+% Use the asterisk to denote corresponding authorship and provide email address in note below.
+* dskim@kumoh.ac.kr
+
+% ORCID iDs (enter in the submission system):
+% Victor Ikenna Kanu 0009-0005-5606-8105; Ihunanya Udodiri Ajakwe 0009-0004-9922-2320;
+% Josiah Ayoola Isong 0000-0002-6151-1950; Simeon Okechukwu Ajakwe 0000-0002-6973-530X;
+% Dong-Seong Kim 0000-0002-2977-5964
+
+\end{flushleft}
+% Please keep the abstract below 300 words
+\section*{Abstract}
+Models that forecast later differentiation states from earlier single-cell RNA-sequencing snapshots are trained and evaluated on pseudo-trajectories that link cells across time points. Because measurement is destructive, how cells are linked---independently, or through an inferred coupling such as optimal transport (OT)---determines how much temporal information a benchmark contains, yet this is rarely stated or checked, and model comparisons are often single-seed and vulnerable to train--test leakage.
+
+A leakage-safe protocol (one split shared by all models, training-only normalization, 20 seeds, paired statistics with an explicit equivalence test, and an input-independent baseline) was applied to iPSC-to-dopaminergic-neuron and iPSC-to-cardiomyocyte time courses. When cells are paired independently, the late stage is provably independent of the earlier stages. The protocol recovered this null: a Transformer, a random forest, and ridge regression were statistically equivalent, performed no better than the constant training mean, and were all outperformed by a constant equal to the training median ($6$--$7\%$ lower error on the neural lineage and $28$--$31\%$ on the cardiac); a $19.4\%$ Transformer advantage obtained with the pipeline of an earlier study arose from train--test leakage. In positive controls, the same protocol detected dependence when the construction contained it: on simulated differentiation with known ground truth, it detected genuinely recoverable dependence, and models trained on OT-coupled snapshots approached the oracle on true trajectories. On both real lineages, OT coupling in a transcriptome-wide PCA embedding of $2{,}000$ highly variable genes allowed every model to beat the input-free baseline, showing that the protocol detects dependence induced by the chosen coupling, not that this dependence is biological. The Transformer never significantly outperformed the random forest, while the stage-order shuffle remained insensitive even when temporal dependence was known to exist because stage identity could be inferred from the state values.
+
+What a single-cell forecasting benchmark can detect is set by how cells are coupled across time, not by model capacity. Independent pairing yields a null by construction. Forecasting benchmarks should state their coupling, report an input-independent baseline matched to the evaluation metric, and validate their controls in settings where temporal dependence is known to exist.
+
+% Keywords (PLOS does not print keywords): single-cell RNA-seq, differentiation forecasting,
+% optimal transport, data leakage, equivalence testing, benchmark evaluation
+
+% Please keep the Author Summary between 150 and 200 words. Use first person.
+% DRAFT -- written for this conversion; please review and revise.
+\section*{Author summary}
+Single-cell RNA sequencing destroys the cells it measures, so no cell is ever observed at two time points. To train models that forecast how differentiating stem cells will change, researchers must therefore link cells from different time points computationally. We asked how this linking choice affects what a forecasting benchmark can reveal. When cells are linked at random, the later state carries no information from the earlier ones, so the best possible forecast is a constant. Using neural and cardiac differentiation data, we built an evaluation protocol that avoids train--test leakage, repeats every comparison over 20 random seeds, and tests explicitly for equivalence. Under random linking, a Transformer, a random forest, and a linear model performed equally, and all were beaten by simply predicting the training median; an apparent Transformer advantage reported earlier came from leakage. When cells were instead linked by optimal transport, or when true trajectories were simulated, the same protocol detected temporal dependence, yet the Transformer never beat the random forest. We conclude that how cells are linked, not model capacity, decides what a benchmark can detect, and we recommend practices for building forecasting benchmarks that can be trusted.
+
+
+\clearpage
+\newgeometry{top=0.85in,left=1in,right=1in,footskip=0.75in}
+\linenumbers
+
+% Use "Eq" instead of "Equation" for equation citations.
+\section*{Introduction}
+\label{sec:intro}
+
+Single-cell RNA sequencing (scRNA-seq) has enabled population-scale characterization of stem-cell differentiation, resolving stage-dependent gene-expression programs across experimental timepoints~\cite{jerber2021population}. A natural ambition is to move from describing these programs to \emph{forecasting} them: given cell states observed at early differentiation stages, predict the state at a later stage. Generative models of single-cell time series now aim to predict future cell states and fates from snapshot data~\cite{yeo2021prescient,tong2020trajectorynet}, neural ordinary differential equations (ODEs) have been proposed for continuous-time transcriptomic forecasting~\cite{erbe2023transcriptomic}, and related models learn cellular dynamics with variational--neural-ODE hybrids~\cite{farrell2023inferring} or physics-informed stochastic differential equations~\cite{jiang2024physics}. In parallel, Transformer architectures developed for annotation and foundation modelling~\cite{chen2023transformer,cui2024scgpt} are increasingly applied to single-cell prediction tasks. Where such models have been compared with simple baselines under careful evaluation---most directly in the closely related problem of predicting transcriptional responses to perturbation---the expressive models have often failed to outperform linear or even trivial predictors~\cite{ahlmanneltze2025deep,kernfeld2023systematic}. Whether added capacity, and in particular the capacity to model temporal dependency, improves forecasts of differentiation state therefore needs to be tested rather than assumed.
+
+Two fronts determine whether a reported improvement is real. The first is the structure of the data on which such models are evaluated. Because single-cell measurement is destructive, no cell is observed at more than one timepoint, and a single-cell experiment captures only a static snapshot at one moment, posing a recognised challenge for time-resolved analysis~\cite{la2018rna}. Experimental strategies can partly recover temporal links---metabolic RNA labelling resolves newly transcribed from pre-existing RNA within a cell over hours~\cite{erhard2019scslam,cao2020scifate}, and heritable lineage barcodes connect clonally related cells sampled at different times~\cite{weinreb2020lineage}---but standard cross-sectional differentiation time-courses, including those analysed here, carry neither. For such data, temporal ordering must be imposed computationally, either through pseudotime inference~\cite{saelens2019comparison,haghverdi2016diffusion}, RNA-velocity and dynamical modelling~\cite{la2018rna,bergen2020generalizing}, by optimal-transport couplings that infer probable ancestor--descendant relationships between consecutive time points~\cite{schiebinger2019optimal,lavenant2024toward}, or by assembling \emph{pseudo-trajectories} that concatenate independently sampled cells under a ground-truth stage order. A pseudo-trajectory is not a tracked lineage---its constituent states are statistically independent draws---so it is not obvious that it contains any within-trajectory temporal dependency for a sequence model to exploit. Whether a Transformer's temporal machinery confers any advantage on such data is an empirical question that is seldom posed directly.
+
+The second front is evaluation rigor. Data leakage---the inadvertent sharing of information between training and test partitions---is a pervasive and well-documented failure mode in machine learning applied to biology, producing performance estimates far better than the intended application supports~\cite{whalen2022navigating,bernett2024guiding}. Its reach is not anecdotal: a cross-disciplinary survey attributed irreproducible findings to leakage in at least $294$ papers across $17$ fields, and showed that apparent advantages of complex models over simple baselines frequently fail to reproduce once leakage is removed~\cite{kapoor2023leakage}. In genomics, a common route is preprocessing fitted on the full dataset before splitting---for example normalization, scaling, or feature selection whose parameters are estimated using test samples---so that held-out data silently shape the training inputs~\cite{whalen2022navigating}. Compounding this, model comparisons are often reported from a single random seed, even though both the construction of pseudo-trajectories and the training of neural models are stochastic; a single-seed point estimate cannot separate a genuine effect from sampling variation, motivating community reproducibility efforts that call for repeated runs and reported variance~\cite{pineau2021improving}, and the field's most rigorous benchmarking efforts have instead emphasised many datasets, shared protocols, and reproducible pipelines~\cite{saelens2019comparison}. Establishing that two models perform comparably, moreover, requires an explicit test for equivalence against a pre-specified margin rather than the absence of a significant difference, since a non-significant test is not evidence of equivalence~\cite{lakens2017equivalence}.
+
+The two fronts interact. How cells are linked across time points determines how much temporal information a benchmark contains at all (Table~\ref{tab:rigor}), and that ceiling is rarely stated or checked; an evaluation that cannot distinguish a model's skill from an artifact of its own construction cannot then establish whether temporal models help. What is missing is an evaluation design with known answers: a setting in which no model can succeed, to verify that the protocol reports no advantage, and a setting in which genuine temporal dependence exists, to verify that it detects one.
+
+% Place tables after the first paragraph in which they are cited.
+\begin{table}[!ht]
+\centering
+\caption{\textbf{Ways of linking cells across the time points of a differentiation time course, and what each implies for a benchmark that forecasts a late-stage state from earlier stages.} The time scale matters: the stages forecast here are separated by days to weeks, whereas labelling and velocity resolve changes over hours. Only lineage-based links observe a dependence between time points directly; computational couplings impose one under modelling assumptions; independent pairing contains none.}
+\label{tab:rigor}
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.0cm} >{\raggedright\arraybackslash}p{4.8cm} >{\raggedright\arraybackslash}p{7.0cm}}
+\thickhline
+\textbf{Linking strategy} & \textbf{What connects time points} & \textbf{Implication for a forecasting benchmark} \\
+\thickhline
+Independent pairing (pseudo-trajectories; this study and~\cite{kanu2026transformer}) & One cell drawn independently per stage; stage order only & The late stage is independent of earlier stages; the optimal forecast is a constant (Proposition~\ref{prop:null}). A \emph{null} setting by construction. \\
+\hline
+Pseudotime ordering~\cite{haghverdi2016diffusion,saelens2019comparison} & Cells ordered along an inferred trajectory by transcriptional similarity & Orders states but does not pair a cell with its own future; pairing along pseudotime imposes dependence through similarity, not lineage. \\
+\hline
+RNA velocity~\cite{la2018rna,bergen2020generalizing} & Spliced/unspliced ratios indicate the direction of change within a cell & Within-cell information, but over hours; extrapolation across inter-stage gaps of days to weeks is not supported. \\
+\hline
+Optimal-transport couplings~\cite{schiebinger2019optimal,lavenant2024toward} & Probabilistic ancestor--descendant couplings between consecutive snapshots & Induces dependence between stages; principled under gradient-drift stochastic dynamics, but the dependence is inferred, not observed. Used here as a positive control. \\
+\hline
+Metabolic RNA labelling~\cite{erhard2019scslam,cao2020scifate} & Newly transcribed vs.\ pre-existing RNA in the same cell & Observed within-cell temporal information over hours; a genuine but short-horizon signal. \\
+\hline
+Lineage barcoding~\cite{weinreb2020lineage} & Heritable barcodes shared by clonally related cells sampled at different times & Observed clonal coupling across days (sister cells rather than the same cell); the setting in which a forecasting advantage could be tested against ground truth. \\
+\thickhline
+\end{tabular}
+\end{table}
+
+This study closes that gap. A single, leakage-safe protocol is applied to two independent differentiation lineages---neural (dopaminergic, iPSC$\rightarrow$dopaminergic neuron)~\cite{jerber2021population} and cardiac (iPSC$\rightarrow$cardiomyocyte)~\cite{elorbany2022single}---reducing scRNA-seq to a compact two-dimensional pluripotency--differentiation state and forecasting the late-stage state from the two earlier stages. Four predictors are evaluated as peers under identical conditions: a linear baseline, a complexity-matched random forest, a Transformer, and a mechanistic ODE calibrated under three regimes of increasing sample-level fidelity. All are measured against a constant predictor, the training median of the late stage, which is provably optimal when stages are paired independently (Proposition~\ref{prop:null}). Every comparison is reported over $20$ random seeds that reseed both pseudo-trajectory construction and model training, with paired effect sizes and an explicit equivalence test rather than single-seed point estimates. A stage-order shuffle and a positional-encoding ablation probe whether the Transformer uses input order, and a $38$-variant sweep tests robustness to the state representation. Finally, two positive controls---simulated differentiation with a known coupling, and the real data re-linked by optimal-transport couplings at $N=200$ and $N=2{,}000$ trajectories---test whether the same protocol detects temporal dependence when it is present---recoverable dependence with known ground truth in simulation, and coupling-induced dependence on the real data.
+
+On independently paired data, the protocol recovers the known null. Under leakage-safe evaluation the Transformer is statistically equivalent to a ten-parameter linear model and to the complexity-matched random forest, on both lineages; destroying stage order leaves its accuracy unchanged; and a fairly calibrated mechanistic model provides no sample-level benefit, degrading monotonically as its calibration is made fairer. A single mechanism accounts for all of these results: in pseudo-trajectories built from independently sampled cells the early stages carry no information about the late stage, so the optimal forecast is a constant. Consistent with this, the constant median predictor outperforms every trained model on both lineages; the trained models instead perform no better than the training mean, the input-independent optimum of the squared-error loss they are trained with, and so behave as approximately input-independent predictors.  The contribution is therefore less any single negative result than the evaluation protocol that exposes it.
+
+The main contributions are:
+\begin{itemize}
+    \item An analytical null for independently paired pseudo-trajectories (Proposition~\ref{prop:null}) and its empirical confirmation: every trained model performs no better than the constant training mean and is outperformed by the metric-matched constant training median, on two lineages.
+    \item A leakage-safe, multi-seed, equivalence-tested evaluation protocol, with a worked example of how train--test leakage produced a spurious $19.4\%$ advantage in an earlier study.
+    \item Positive controls---a simulated differentiation process with known coupling, and OT-coupled pseudo-trajectories from both real lineages at two sample sizes---showing that the protocol detects recoverable dependence when ground truth is known (simulation) and detects the dependence that a chosen coupling induces (real data), so that the null under independent pairing is attributable to the coupling rather than to the protocol, the state representation, or the sample size.
+    \item Practical findings for benchmark design: the Transformer never significantly outperformed a random forest, with or without genuine dependence; a stage-order shuffle control is insensitive when stages are distinguishable by value; and MSE-trained models scored by MAE should be compared with the metric-matched constant.
+\end{itemize}
+
+
+\section*{Materials and methods}
+\label{sec:methods}
+The methodology is structured around a single guiding principle: every quantity reported in this study is presented as an estimate with its associated uncertainty, calculated using a protocol that is consistent across all models and eliminates train--test information leakage. This principle determines the organization of the section. The subsections ``\nameref{subsec:data_state}'' and ``\nameref{subsec:state}'' detail the two differentiation datasets and the reduction of high-dimensional expression data to an interpretable two-dimensional state. ``\nameref{subsec:traj}'' outlines the pseudo-trajectory construction and explicitly states the underlying assumption, which subsequent controls are designed to test. ``\nameref{subsec:protocol}'' defines the multi-seed evaluation protocol and the paired statistical methods that replace single-point estimates. ``\nameref{subsec:models}'' describes the predictors. ``\nameref{subsec:ode_calib}'' describes the three calibration regimes for the dynamical ODE model. The subsections from ``\nameref{subsec:controls}'' to ``\nameref{subsec:sensitivity}'' present the temporal-structure controls and the representation-sensitivity analysis. Fig~\ref{fig:system} provides an overview of the pipeline.
+
+% Place figure captions after the first paragraph in which they are cited.
+\begin{figure}[!h]
+\caption{\textbf{Overview of the leakage-safe, multi-seed, equivalence-tested forecasting benchmark.}
+An identical protocol is applied to two iPSC differentiation lineages (neural, dopaminergic; cardiac, \texttt{GSE175634}), reducing scRNA-seq to a 2-D pluripotency--differentiation state and assembling stage-ordered pseudo-trajectories ($N=200$ per seed). All models share a leakage-safe $70/15/15$ split, evaluated over $20$ seeds that reseed both trajectory construction and training, and compared by paired $\Delta$MAE with bootstrap CIs, Wilcoxon tests, and an equivalence band $|\Delta|<0.01$. Four predictors (Ridge, complexity-matched random forest, Transformer, mechanistic ODE) are assessed as peers alongside temporal-order and representation controls. Arrow colors denote the data, rigor, model, control, and verdict flows.}
+\label{fig:system}
+\end{figure}
+
+\subsection*{Datasets}
+\label{subsec:data_state}
+
+This study deliberately examines two independent differentiation systems rather than one, because a conclusion drawn from a single dataset cannot be distinguished from that dataset's properties. The two systems share a common discrete-stage structure---three ground-truth timepoints, an untreated or control condition, and an identifiable pair of marker programs---but differ in lineage, laboratory of origin, and cell count, which is precisely the variation needed to test whether any finding generalizes. Throughout, each cell is summarized by two scores in $[0,1]$: a pluripotency score $P$ and a lineage-differentiation score $D$, the normalized mean expression of a pluripotency and a differentiation marker panel, respectively (see below and ``\nameref{subsec:state}'').
+
+\subsubsection*{Neural (dopaminergic) lineage}
+The neural data are drawn from the population-scale induced-pluripotent-stem-cell (iPSC) to dopaminergic-neuron differentiation resource of~\cite{jerber2021population}, restricted to untreated control samples (treatment $=$ \texttt{NONE}) so that the trajectory reflects unperturbed differentiation. The raw series comprises $205{,}416$ cells across two treatment conditions; after restricting to untreated controls and standard quality control, $161{,}584$ cells are retained across three experimental stages: day~11 (D11, $50{,}661$ cells), day~30 (D30, $50{,}169$ cells), and day~52 (D52, $60{,}754$ cells). These stages span the transition from residual pluripotency through neural progenitor commitment to dopaminergic maturation.
+
+\subsubsection*{Cardiac (cardiomyocyte) lineage}
+As an independent cross-lineage replication, the iPSC$\rightarrow$cardiomyocyte differentiation time-course of~\cite{elorbany2022single} (GEO accession \texttt{GSE175634}) is processed directly from raw counts using the identical pipeline. The deposited series contains $230{,}786$ cells profiled across seven timepoints (days 0, 1, 3, 5, 7, 11, 15) from more than twelve donor lines under a single directed protocol, with no treatment confound; annotation recovers the expected progression from iPSC through mesoderm and progenitor states to cardiomyocyte. The three-stage forecasting task uses day~0, day~5, and day~11 (early iPSC, mid-transition, committed cardiomyocyte; $41{,}330$, $19{,}508$, and $39{,}342$ cells respectively). These stages are chosen deliberately: they span the informative portion of the trajectory while avoiding the post-day-7 plateau, over which the differentiation score is near-constant and would contribute little dynamical signal. This dataset serves specifically to subject every claim made on the neural data to an out-of-distribution test. Before any modeling, the expected developmental biology was confirmed to be recovered under the present state construction: the pluripotency program extinguishes monotonically across the three stages (median $P$: $0.86\!\rightarrow\!0.15\!\rightarrow\!0.00$) and the cardiomyocyte program activates (median $D$: $0.00\!\rightarrow\!0.19\!\rightarrow\!0.22$). This biological sanity check matters because it establishes that a null result on this dataset reflects the structure of the forecasting task rather than a failure to capture differentiation at all.
+
+\subsubsection*{Marker programs}
+Expression is summarized by two curated gene panels per lineage: a pluripotency/progenitor panel $\mathcal{G}_P$ and a lineage-differentiation panel $\mathcal{G}_D$. For the neural data,
+\[
+\mathcal{G}_P=\{\mathrm{POU5F1,\,NANOG,\,SOX2,\,UTF1,\,TDGF1}\},
+\]
+\[
+\mathcal{G}_D=\{\mathrm{TH,\,DDC,\,SLC6A3,\,DRD2,\,LMX1A,\,FOXA2}\}.
+\]
+$\mathcal{G}_P$ collects canonical pluripotency transcription factors; $\mathcal{G}_D$ collects dopaminergic-identity and maturation genes spanning dopamine synthesis (\textrm{TH, DDC}), transport (\textrm{SLC6A3}), receptor (\textrm{DRD2}), and floor-plate fate (\textrm{LMX1A, FOXA2}). For the cardiac data the panels are lineage-appropriate analogues, a broadened pluripotency panel and a cardiomyocyte-identity panel:
+\[
+\mathcal{G}_P^{\mathrm{card}}=\{\mathrm{POU5F1,\,NANOG,\,SOX2,\,LIN28A,\,DPPA4,\,UTF1,\,TDGF1}\},
+\]
+\begin{align*}
+\mathcal{G}_D^{\mathrm{card}}=\{&\mathrm{TNNT2,\,MYH6,\,MYH7,\,ACTC1,\,NPPA,\,MYL7,}\\
+&\mathrm{TNNI1,\,TNNI3,\,RYR2,\,NKX2\text{-}5,\,GATA4,\,TBX5,\,MYL2}\}.
+\end{align*}
+The cardiac differentiation panel spans sarcomeric structure (\textrm{TNNT2, MYH6/7, ACTC1, MYL2/7, TNNI1/3}), calcium handling (\textrm{RYR2}), natriuretic signalling (\textrm{NPPA}), and cardiac transcription factors (\textrm{NKX2-5, GATA4, TBX5}). All base-panel genes were present in their respective datasets with no missing markers. The dopaminergic panel is not transferred onto the cardiac data; doing so would conflate a lineage mismatch with the forecasting question under study. The robustness of all conclusions to the specific choice of genes within each panel is established directly in ``\nameref{subsec:sensitivity}''.
+
+\subsection*{State construction and leakage-safe normalization}
+\label{subsec:state}
+
+For each cell at stage $t$, raw counts are first library-size normalized to $10{,}000$ counts per cell (CP10K) and log-transformed, $\log(1+\mathrm{CP10K})$ (neural data: Scanpy \texttt{normalize\_total}+\texttt{log1p}; cardiac data: the identical transform applied during a single streaming pass over the counts matrix, avoiding loading the full $230{,}786\times 38{,}943$ array). The two state scores are the per-panel means of the log-normalized expression:
+\begin{equation}
+P^{\mathrm{raw}}_t = \frac{1}{|\mathcal{G}_P|}\sum_{g\in\mathcal{G}_P}\log\!\left(1+\mathrm{expr}_t(g)\right), \quad
+D^{\mathrm{raw}}_t = \frac{1}{|\mathcal{G}_D|}\sum_{g\in\mathcal{G}_D}\log\!\left(1+\mathrm{expr}_t(g)\right),
+\label{eq:marker_scores}
+\end{equation}
+with $\mathrm{expr}_t(g)$ the count-depth-normalized expression of gene $g$. Mean-of-log aggregation is chosen for stability and interpretability; the representation-sensitivity sweep (see ``\nameref{subsec:sensitivity}'') confirms median and $z$-score aggregations give the same conclusions.
+
+Each raw score is min--max scaled to the unit interval using bounds from the training partition only, then clipped:
+\begin{equation}
+z^{\mathrm{norm}} = \mathrm{clip}\!\left(\frac{z - z_{\min}^{\mathrm{tr}}}{z_{\max}^{\mathrm{tr}} - z_{\min}^{\mathrm{tr}}},\;0,\;1\right), \quad z\in\{P^{\mathrm{raw}},D^{\mathrm{raw}}\}, \quad s_t=[P_t,D_t]\in[0,1]^2,
+\label{eq:minmax_clip}
+\end{equation}
+where $z_{\min}^{\mathrm{tr}},z_{\max}^{\mathrm{tr}}$ are training-cell extrema and $s_t$ is the resulting stage state. Estimating bounds on the full dataset---a common shortcut---would let the held-out range influence preprocessing, a subtle leakage. Clipping places a substantial share of late-stage values exactly at the lower bound, because marker panels are often undetected in individual cells: on average across seeds, $50\%$ (neural) and $83\%$ (cardiac) of late-stage $P$ values and $36\%$ and $28\%$ of late-stage $D$ values in the training partition equal zero. The resulting late-stage marginals are strongly skewed, so their mean and median differ markedly, which matters for the constant baseline (see ``\nameref{subsec:res_constant}''). The qualitative stage-wise trends were verified to persist under unclipped scoring.
+
+\subsection*{Pseudo-trajectory construction and its encoded assumption}
+\label{subsec:traj}
+
+Because the datasets do not provide lineage-resolved observations linking the same cell across stages, fixed-length sequences are assembled by sampling one cell independently (with replacement) per stage and concatenating their states under ground-truth stage ordering:
+\begin{equation}
+x^{(i)}=\big[s_{t_0}^{(i)},\,s_{t_1}^{(i)},\,s_{t_2}^{(i)}\big],
+\qquad i=1,\dots,N,\;\; N=200,
+\label{eq:traj_def}
+\end{equation}
+giving a $200\times 3\times 2$ tensor per seed.
+
+It is essential to state plainly what this construction does and does not represent, because the interpretation of every downstream result depends on it. Each $x^{(i)}$ is a \emph{population-level pseudo-trajectory}: its three states are independent draws from three marginal stage distributions, stitched together by stage order alone. It is \emph{not} a tracked single-cell lineage. Consequently the only temporal information present in $x^{(i)}$ is the ordering of three otherwise statistically independent samples, and the prediction target $\hat{s}_{t_2}=f(s_{t_0},s_{t_1})$ is a stage-level marker-state distribution rather than the future of any individual cell. This independence has a direct analytical consequence, which defines what any model can achieve on such data.
+
+\begin{proposition}[Independent pairing implies a constant optimal predictor]
+\label{prop:null}
+Let a test pseudo-trajectory be generated by Eq~(\ref{eq:traj_def}), so that $s_{t_2}$ is independent of $x=(s_{t_0},s_{t_1})$, and let $f$ be any predictor fitted on training trajectories drawn independently of that test trajectory. Let $m=(m_P,m_D)$ be the component-wise median of the marginal distribution of $s_{t_2}$. Then
+\[
+\mathbb{E}\big[\mathrm{MAE}_s(f)\big]\;\ge\;\mathbb{E}\big[\mathrm{MAE}_s(m)\big],
+\]
+with equality only if $f(x)$ is a component-wise median of $s_{t_2}$ for almost every $x$. In particular, $\mathbb{E}[s_{t_2}\mid x]=\mathbb{E}[s_{t_2}]$, and the Bayes-optimal predictor under absolute loss is the constant $m$.
+\end{proposition}
+
+\noindent\emph{Proof.} Condition on $x$ and on the training data. The prediction $c=f(x)$ is then fixed, and because $s_{t_2}$ is independent of both, $\mathbb{E}\,|s_{t_2,k}-c_k|$ is minimized, for each component $k\in\{P,D\}$, by any median of the marginal of $s_{t_2,k}$. Averaging over $x$ and the training data gives the inequality. $\square$
+
+Proposition~\ref{prop:null} makes three predictions before any model is trained: (i)~no model can outperform the constant marginal-median predictor in expectation, so models of any capacity can at best tie with one another; (ii)~input transformations that preserve the information about $s_{t_2}$, which is none, such as permuting stage order or removing positional encoding, cannot change attainable accuracy; and (iii)~any input-dependent flexibility, including per-trajectory calibration of a dynamical model, can only add variance. The independently paired benchmark is therefore a \emph{null} setting by construction. The empirical analyses that follow test whether the evaluation protocol correctly recovers this known null, and whether a protocol that lacked these safeguards would instead report a spurious advantage (see ``\nameref{subsec:res_leakage}''). They do not, on their own, establish how models behave when genuine temporal dependence is present; the positive controls (see ``\nameref{subsec:positive}'') address that question.
+
+Whether a sequence model behaves as Proposition~\ref{prop:null} predicts is checked empirically by the controls described in ``\nameref{subsec:controls}''. This construction is retained precisely because it mirrors what the original study~\cite{kanu2026transformer} and many comparable analyses do, so that the present evaluation speaks to that common practice rather than to an idealized setting.
+
+Algorithm~\ref{alg:traj_norm} formalizes the construction together with the leakage-safe normalization, written as the per-seed procedure actually executed: trajectory sampling, training-only split, training-bounds estimation, and normalization are all driven by a seed that is varied across runs (see ``\nameref{subsec:protocol}'').
+
+\begin{algorithm}[!htbp]
+\scriptsize
+\caption{Per-Seed Pseudo-Trajectory Construction and Leakage-Safe Normalization}
+\label{alg:traj_norm}
+\textbf{Require:} scRNA-seq dataset $\mathcal{X}$ with stage labels $t\in\{t_0,t_1,t_2\}$, untreated/control filter $\phi(\cdot)$, marker panels $\mathcal{G}_P,\mathcal{G}_D$, trajectory count $N=200$, split sizes $(N_{\mathrm{tr}},N_{\mathrm{val}},N_{\mathrm{te}})=(140,30,30)$, seed $s$ \\
+\textbf{Output:} Trajectories $\mathcal{T}=\{x^{(i)}\}_{i=1}^{N}$, split indices $(\mathcal{I}_{\mathrm{tr}},\mathcal{I}_{\mathrm{val}},\mathcal{I}_{\mathrm{te}})$, training bounds $\mathcal{B}$ \\
+\BlankLine
+\textbf{SetSeed}$(s)$ \tcp*{seed governs sampling \emph{and} split}
+\tcp{Filter to untreated/control and partition by ground-truth stage}
+$\mathcal{X}_0 \leftarrow \{x\in\mathcal{X}\;:\;\phi(x)=1\}$ \;
+$\mathcal{X}_{t}\leftarrow \{x\in\mathcal{X}_0: \mathrm{stage}(x)=t\}$ \textbf{ for } $t\in\{t_0,t_1,t_2\}$ \;
+\BlankLine
+\tcp{Sample independent cells per stage and form ordered pseudo-trajectories}
+\For{$i\leftarrow 1$ \KwTo $N$}{
+    \For{$t \in \{t_0,t_1,t_2\}$}{
+        $c_t \sim \mathcal{U}(\mathcal{X}_t)$ \tcp*{independent draw}
+        $P^{\mathrm{raw}}_t\leftarrow \frac{1}{|\mathcal{G}_P|}\sum_{g\in\mathcal{G}_P}\log(1+\mathrm{expr}_{c_t}(g))$ \;
+        $D^{\mathrm{raw}}_t\leftarrow \frac{1}{|\mathcal{G}_D|}\sum_{g\in\mathcal{G}_D}\log(1+\mathrm{expr}_{c_t}(g))$ \;
+    }
+    $x_{\mathrm{raw}}^{(i)}\leftarrow \big[(P^{\mathrm{raw}}_{t_0},D^{\mathrm{raw}}_{t_0}),(P^{\mathrm{raw}}_{t_1},D^{\mathrm{raw}}_{t_1}),(P^{\mathrm{raw}}_{t_2},D^{\mathrm{raw}}_{t_2})\big]$ \;
+    $\mathcal{T}_{\mathrm{raw}}\leftarrow \mathcal{T}_{\mathrm{raw}}\cup\{x_{\mathrm{raw}}^{(i)}\}$ \;
+}
+\BlankLine
+\tcp{Trajectory-level split, shared identically across all models}
+$(\mathcal{I}_{\mathrm{tr}},\mathcal{I}_{\mathrm{val}},\mathcal{I}_{\mathrm{te}})\leftarrow \textbf{SplitIndices}(N,N_{\mathrm{tr}},N_{\mathrm{val}},N_{\mathrm{te}})$ \;
+\BlankLine
+\tcp{Min--max bounds from TRAINING trajectories only (prevents leakage)}
+$\mathcal{S}_{\mathrm{tr}}\leftarrow \{(P^{\mathrm{raw}},D^{\mathrm{raw}})\in x_{\mathrm{raw}}^{(i)}: i\in \mathcal{I}_{\mathrm{tr}}\}$ \;
+$P_{\min/\max}^{\mathrm{tr}}\leftarrow \min/\max \mathcal{S}_{\mathrm{tr}}(P^{\mathrm{raw}})$;\quad
+$D_{\min/\max}^{\mathrm{tr}}\leftarrow \min/\max \mathcal{S}_{\mathrm{tr}}(D^{\mathrm{raw}})$ \;
+$\mathcal{B}\leftarrow \{P_{\min}^{\mathrm{tr}},P_{\max}^{\mathrm{tr}},D_{\min}^{\mathrm{tr}},D_{\max}^{\mathrm{tr}}\}$ \;
+\BlankLine
+\tcp{Normalize all trajectories with training bounds and clip to $[0,1]$}
+\For{$i\leftarrow 1$ \KwTo $N$}{
+    \ForEach{$(P^{\mathrm{raw}},D^{\mathrm{raw}})\in x_{\mathrm{raw}}^{(i)}$}{
+        $P\leftarrow \mathrm{clip}\!\big(\tfrac{P^{\mathrm{raw}}-P_{\min}^{\mathrm{tr}}}{P_{\max}^{\mathrm{tr}}-P_{\min}^{\mathrm{tr}}},0,1\big)$;\quad
+        $D\leftarrow \mathrm{clip}\!\big(\tfrac{D^{\mathrm{raw}}-D_{\min}^{\mathrm{tr}}}{D_{\max}^{\mathrm{tr}}-D_{\min}^{\mathrm{tr}}},0,1\big)$ \;
+        Replace $(P^{\mathrm{raw}},D^{\mathrm{raw}})$ with $(P,D)$ in $x^{(i)}$ \;
+    }
+    $\mathcal{T}\leftarrow \mathcal{T}\cup\{x^{(i)}\}$ \;
+}
+\BlankLine
+\Return $(\mathcal{T},\mathcal{I}_{\mathrm{tr}},\mathcal{I}_{\mathrm{val}},\mathcal{I}_{\mathrm{te}},\mathcal{B})$
+\end{algorithm}
+
+\subsection*{Multi-seed evaluation protocol and statistics}
+\label{subsec:protocol}
+
+\subsubsection*{Forecasting task and metric}
+The task maps the two earliest stage states to the latest, $\hat{s}_{t_2}=f(s_{t_0},s_{t_1})$, scored by mean absolute error averaged over the two state components:
+\begin{equation}
+\mathrm{MAE}=\frac{1}{n}\sum_{i=1}^{n}\big|y^{(i)}-\hat{y}^{(i)}\big|, \qquad
+\mathrm{MAE}_{s}=\tfrac{1}{2}\big(\mathrm{MAE}_{P}+\mathrm{MAE}_{D}\big).
+\label{eq:mae}
+\end{equation}
+A secondary diagnostic of temporal robustness trains on the early transition and tests on the late one ($x_{t_0:t_1}\!\rightarrow\!s_{t_1}$ vs.\ $x_{t_1:t_2}\!\rightarrow\!s_{t_2}$) under identical preprocessing.
+
+\subsubsection*{Why a single seed is insufficient}
+The pseudo-trajectory construction and model training are both stochastic, and a single fixed seed yields one realization from the joint distribution over both. Reporting that one realization as a point estimate gives no indication of its variability and, as the Results show, can be dominated by it. MAE is therefore treated as a random variable whose distribution is estimated directly.
+
+\subsubsection*{Seeds perturb both randomness sources}
+The protocol runs $S=20$ seeds. Each seed perturbs \emph{both} (i) pseudo-trajectory construction---which cells are sampled and how they are paired and split, via Algorithm~\ref{alg:traj_norm}---and (ii) model training: weight initialization, dropout masks, and minibatch ordering for the Transformer, and bootstrap resampling for the Random Forest. For each seed a single canonical $140/30/30$ split is drawn and shared identically by every model, so that for any pair of models the difference in MAE on a given seed is a genuine paired observation on the same data.
+
+\subsubsection*{A single consistent split, by permutation}
+Within each seed, the $N=200$ trajectory indices are permuted with the seed's random number generator and partitioned $70/15/15$ ($140$ train, $30$ validation, $30$ test). The permutation is applied once and the resulting index sets are used identically by every model, so that the partitions are mutually disjoint and no trajectory appears in more than one of them. This single-permutation protocol eliminates, by construction, the train--test overlap that arises when a permuted training set is paired with a contiguously sliced test set, the effect of which is quantified in ``\nameref{subsec:res_leakage}''.
+
+\subsubsection*{Paired statistics and effect sizes}
+Each model is summarized by its across-seed mean, standard deviation, and $95\%$ confidence interval of MAE. Each baseline is compared to the Transformer via the per-seed paired difference $\Delta^{(s)} = \mathrm{MAE}^{(s)}_{\text{baseline}} - \mathrm{MAE}^{(s)}_{\text{Transformer}}$, summarized by three quantities: a percentile paired-bootstrap $95\%$ CI on $\overline{\Delta}$ ($10^4$ resamples), a Wilcoxon signed-rank test (no normality assumption, appropriate at $S=20$), and the standardized effect size $d_z=\overline{\Delta}/\mathrm{sd}(\Delta)$. With multiple baselines, $p$-values are Holm--Bonferroni corrected. Effect size and CI placement are weighted over nominal significance. For equivalence testing, the interval used is the percentile paired-bootstrap $95\%$ CI on the mean paired difference; this interval is reported without a multiplicity adjustment, whereas Holm--Bonferroni correction is applied to the multiple-baseline hypothesis-test $p$-values. Following the two-one-sided-tests logic~\cite{lakens2017equivalence}, two models are declared \emph{equivalent} only when the entire $95\%$ CI on $\overline{\Delta}$ lies within a margin $|\Delta|<\delta$, with $\delta=0.01$ MAE units. This margin corresponds to about $6\%$ of the Ridge MAE on the neural lineage ($0.177$) and $9\%$ on the cardiac lineage ($0.110$), and to about half the seed-to-seed standard deviation of MAE ($\approx0.02$); it was intended as the largest difference that would be practically negligible for this benchmark. It was fixed in the original analysis code but was not preregistered, and the record does not establish that it was chosen before the paired results were inspected. The equivalence analysis should therefore be read as a sensitivity criterion rather than a prospective test. To make its influence transparent, the smallest margin at which each equivalence conclusion would still hold is reported: $0.0058$ (Ridge) and $0.0086$ (random forest) for the model comparisons, at most $0.0037$ for the temporal controls, and $0.0093$ for the representation sweep. All conclusions therefore hold at any margin of at least $0.0093$, but most would not survive a margin of half the size. A CI that merely contains zero, or a non-significant Wilcoxon test, is \emph{not} taken as evidence of equivalence: it indicates only that no difference was detected. This distinction is what permits a defensible negative claim rather than a mere failure to reject.
+
+\subsection*{Predictive models}
+\label{subsec:models}
+
+\subsubsection*{Constant baseline}
+The \emph{constant training-median} predictor ignores the inputs. Within each seed it is computed only from the training partition $\mathcal{I}_{\mathrm{tr}}$ ($140$ trajectories), separately for each target component, as
+\[
+\hat{s}_{t_2}=(m_P,m_D),\qquad m_P=\mathrm{median}_{i\in\mathcal{I}_{\mathrm{tr}}}P^{(i)}_{t_2},\quad m_D=\mathrm{median}_{i\in\mathcal{I}_{\mathrm{tr}}}D^{(i)}_{t_2},
+\]
+where the $P^{(i)}_{t_2},D^{(i)}_{t_2}$ are the late-stage states \emph{after} the training-bounds min--max normalization and clipping of Eq~(\ref{eq:minmax_clip}), i.e.\ on exactly the scale on which all other models are trained and scored. No further transformation or clipping is applied; because the training targets already lie in $[0,1]$, so do their medians. The same two numbers are returned for every validation and test trajectory of that seed, and the validation partition is not used. This is the training-sample estimate of the marginal median $m$ of Proposition~\ref{prop:null}, which makes it the optimal predictor under independent pairing and the reference against which every other model is judged. As a diagnostic, the \emph{constant training-mean} predictor, defined identically with the mean in place of the median, is also scored: it is the input-independent optimum of the squared-error loss used to train the Ridge, random-forest, and Transformer models. Both constants are computed on exactly the per-seed trajectories and splits used by the other models; refitting Ridge on the regenerated data reproduces its stored per-seed MAE to within $10^{-16}$, confirming that the comparison is paired.
+
+\subsubsection*{Classical baselines}
+Two predictors operate on the flattened two-stage context $x=[P_{t_0},D_{t_0},P_{t_1},D_{t_1}]\in\mathbb{R}^4$ to predict $\hat{s}_{t_2}\in\mathbb{R}^2$. \emph{Ridge regression} ($\alpha=1.0$) is a linear map $\hat{s}_{t_2}=Wx+b$ with $\ell_2$ regularization and ten free parameters ($W\in\mathbb{R}^{2\times4}$, $b\in\mathbb{R}^2$); it is the simplest model that can express a dependence of the late state on the early states. \emph{Random Forest} operates on the same representation, included to test whether nonlinear capacity \emph{without} sequence structure improves prediction. In the multi-seed experiments it is complexity-matched by tuning per seed with 3-fold cross-validation on the training partition only (300 trees; maximum depth $\in\{2,3,5,\text{unbounded}\}$; minimum samples per leaf $\in\{1,5,10\}$; MAE scoring). The single-seed leakage analysis (see ``\nameref{subsec:res_leakage}'') reproduces the original fixed configuration (100 trees, maximum depth 10, minimum samples per split 5).
+
+\subsubsection*{Transformer}
+The encoder treats $[s_{t_0},s_{t_1}]$ as a length-two token sequence (each token a 2D state), projecting tokens to $d_{\mathrm{model}}$ dimensions with a fixed sinusoidal positional encoding and emitting the prediction from an MLP head applied to the encoder output at the final position:
+\begin{equation}
+h_t = W_e s_t + b_e + \mathrm{PE}(t), \qquad
+\hat{s}_{t_2} = \mathrm{MLP}\big(\mathrm{Enc}([h_{t_0},h_{t_1}])_{t_1}\big),
+\label{eq:transformer}
+\end{equation}
+with $W_e\in\mathbb{R}^{d_{\mathrm{model}}\times 2}$, $\mathrm{Enc}(\cdot)$ the stacked self-attention encoder, and $\mathrm{MLP}$ a two-layer GELU network. Configuration: input projection $\mathbb{R}^2\!\rightarrow\!d_{\mathrm{model}}{=}128$, 4 encoder layers, 8 attention heads, feedforward dimension 512, GELU, dropout 0.1, MLP head ($128\!\rightarrow\!256\!\rightarrow\!2$, GELU, dropout 0.1) read from the final position ($\approx$827K parameters); Adam ($10^{-3}$, weight decay $10^{-5}$), MSE loss, batch 32, gradient-norm clip 1.0, \texttt{ReduceLROnPlateau} (factor 0.5, patience 10), up to 100 epochs with best-validation selection. The positional encoding and the self-attention over the two stages are the only routes by which temporal order enters; the controls in ``\nameref{subsec:controls}'' test exactly these.
+
+\subsubsection*{Dynamical (ODE) model}
+The fourth predictor is a continuous-time, two-state ODE in calendar time. It is a \emph{phenomenological} dynamical model rather than a molecular or gene-regulatory model: it encodes an explicit hypothesis---pluripotency is maintained and lost while differentiation is induced through a $P$--$D$ commitment interaction---rather than a statistical map learned from examples. It is included because the original study~\cite{kanu2026transformer} benchmarked the Transformer against it, and because it represents the class of hand-specified dynamical priors that are sometimes proposed as an alternative or complement to learned forecasters:
+\begin{align}
+\frac{dP}{dt} &= k_{ps}(1-P) - k_{pd}P - rPD,
+\label{eq:ode_p}\\
+\frac{dD}{dt} &= k_b + k_{ds}PD + rPD - k_{dd}D,
+\label{eq:ode_d}
+\end{align}
+where $k_{ps}$ maintains $P$, $k_{pd}$ decays it, $k_b$ basally induces $D$, $k_{ds}$ couples $D$-synthesis to $P$, $k_{dd}$ decays $D$, and $r$ sets commitment coupling via $PD$. Three time points provide four target quantities (two states at each of $t_1,t_2$) per calibration, so not all six rates can be identified. Two are therefore fixed at the values used in the original study~\cite{kanu2026transformer}, $k_{ps}{=}1.0$ and $k_{dd}{=}0.3$; these are modelling conventions rather than measured rates. The remaining four parameters $[k_{pd},k_{ds},r,k_b]$ are free, bounded to $[0,2]^3\times[0,1]$. The conclusions drawn from this model do not depend on these choices: by Proposition~\ref{prop:null}, no input-dependent predictor, whatever its parameters, can outperform the constant on independently paired data. Integration uses \texttt{solve\_ivp} (RK45, \texttt{rtol}~$10^{-4}$, \texttt{atol}~$10^{-6}$) over the inter-stage calendar intervals---$t=[0,19,41]$ d (neural) and $t=[0,5,11]$ d (cardiac)---with outputs clipped to $[0,1]$ for comparability.
+
+\subsection*{Fair ODE calibration under three regimes}
+\label{subsec:ode_calib}
+
+The four free parameters are fit by differential evolution under three regimes of increasing sample-level fairness, separating whether the ODE \emph{can} fit the data from whether fitting it more faithfully \emph{helps}:
+\begin{enumerate}
+    \item \textbf{Population-mean.} Fit once so that integrating from the training-mean $t_0$ state reproduces the training-mean states at $t_1,t_2$, minimizing $\mathcal{L}_{\mathrm{cal}}(\theta)=\sum_{t\in\{t_1,t_2\}}\lVert\tilde{s}_t(\theta)-\bar{s}_t\rVert_2^2$. A population-trend baseline only.
+    \item \textbf{Distributional.} Fit so a simulated ensemble (propagating a 40-point subsample of the training $t_0$ distribution) matches both the \emph{mean and standard deviation} at $t_1,t_2$, reducing the population--sample mismatch.
+    \item \textbf{Per-trajectory.} Fit per test trajectory (initialized at the population fit) to reproduce its own $t_0\!\rightarrow\!t_1$ step, then integrated onward to $t_2$---the most generous sample-level use.
+\end{enumerate}
+Each calibrated ODE is evaluated on the identical held-out trajectories. The three regimes separate a poor fit from an uninformative input: if fairer sample-level calibration does not improve held-out prediction, the limitation lies in what the early stages carry about the late stage, not in how the model was fitted. This is a statement about this model on this task, not about dynamical modelling in general.
+
+\subsection*{Temporal-structure controls}
+\label{subsec:controls}
+
+Because the pseudo-trajectories pair independently sampled cells (see ``\nameref{subsec:traj}''), the question of whether the Transformer uses temporal structure cannot be settled by its architecture; it must be measured. Two controls are applied on both datasets across all 20 seeds, each compared to the ordered model with the paired statistics described in ``\nameref{subsec:protocol}'':
+\begin{itemize}
+    \item \textbf{Stage-order shuffle.} Only the two \emph{input} stages are affected; the target $s_{t_2}$ is never moved. For each trajectory, a random permutation of its two input tokens $[s_{t_0},s_{t_1}]$ is drawn once (seeded per run) and applied before training and evaluation, so that each trajectory's inputs are independently either kept in order or swapped (each with probability $1/2$). The same rule is applied to the training, validation, and test partitions. Stage values are preserved; only their consistent ordering is destroyed, so the model can no longer rely on a given position holding the earlier stage. If the model is genuinely exploiting temporal ordering, destroying that ordering should degrade performance; if MAE is statistically unchanged, the ordering carried no usable signal.
+    \item \textbf{Positional-encoding ablation.} The sinusoidal $\mathrm{PE}(t)$ term is removed, disabling the explicit temporal index while leaving model capacity intact. An unchanged MAE indicates that positional information contributes nothing.
+\end{itemize}
+Together these remove the two explicit channels through which input order can affect the prediction, and their results are reported as equivalence statements (CI on the paired difference contained within the margin $|\Delta|<0.01$) rather than as mere non-significance. They have a limitation that the positive controls (see ``\nameref{subsec:positive}'') quantify: when the stages differ systematically in their values, a model can identify which input is the earlier stage from the values themselves, so an unchanged error under shuffling does not by itself show that the data lack temporal dependence. The decisive comparison is therefore against the constant baseline.
+
+\subsection*{Representation-sensitivity sweep}
+\label{subsec:sensitivity}
+
+To ensure that no conclusion depends on the particular 2D state, the state-construction choices are swept and the Transformer-versus-Ridge gap recomputed under each, with 20 seeds per variant. To keep the comparison clean, the same sampled cells are reused across all variants within a seed, so that variant-to-variant differences reflect the representation alone. The sweep covers: leave-one-marker-out for every gene in both panels of each lineage; two alternative aggregation rules (per-gene median, and per-gene $z$-score using each gene's global mean and standard deviation across stages) in place of the mean-of-log; and, for the neural lineage, an enlarged marker panel (10 pluripotency and 14 differentiation genes). This yields 15 variants for the neural lineage and 23 for the cardiac lineage, 38 in total. Reporting the distribution of the model gap across this family of reasonable representation choices establishes whether the central result is a property of the task or an artifact of one specific feature definition; robustness is established if every variant's CI on the paired gap lies within the equivalence margin, and in particular no variant produces a statistically significant Transformer advantage.
+
+\subsection*{Positive controls: settings with temporal dependence}
+\label{subsec:positive}
+
+Proposition~\ref{prop:null} guarantees that the protocol should report no advantage on independently paired data, but a protocol that always reports no advantage would pass that test too. Two positive controls therefore ask whether the identical protocol---same split, normalization, model panel, shuffle control, multi-seed design, and paired statistics against the constant---detects temporal dependence when pseudo-trajectories do carry it. The two controls answer different questions: the simulation, where true trajectories are known, tests detection of genuinely recoverable dependence; the real-data control tests detection of the dependence induced by a chosen coupling, which need not be biological. Both are run at the original $N=200$ trajectories ($20$ seeds) and at $N=2{,}000$ ($10$ seeds), to test whether conclusions depend on the small sample that a Transformer might be expected to need more of.
+
+\subsubsection*{Simulated differentiation with a known coupling}
+Cell states $X=(P,D)$ follow the gradient stochastic differential equation
+\begin{equation}
+dX_t=-\nabla V(X_t)\,dt+\sigma\,dW_t,\qquad V(P,D)=\tfrac{a}{2}P^2+b\,(D-d_{\mathrm{lo}})^2(D-d_{\mathrm{hi}})^2,
+\label{eq:sde}
+\end{equation}
+with $a=1$, $b=8$, $d_{\mathrm{lo}}=0.2$, $d_{\mathrm{hi}}=1.0$, $\sigma=0.15$, initial states $P_0\sim\mathcal{N}(1,0.1^2)$, $D_0\sim\mathcal{N}(0.6,0.1^2)$, and observation times $t=0,1,2$ (Euler--Maruyama, step $0.01$). Pluripotency decays while each cell commits, from near the barrier of a double well, to a low- or high-differentiation fate, so the late state depends on the early states. Snapshots are cross-sectional: each stage is observed in an independent population of $2{,}000$ cells, mirroring destructive measurement. Three constructions are compared within each seed: \emph{true} trajectories of tracked particles (an oracle unavailable in real data); \emph{independent} pairing of snapshot cells, as in the main analysis; and \emph{OT-coupled} trajectories. For the latter, balanced entropic optimal-transport plans $\pi^{01}$ (between the $t_0$ and $t_1$ snapshots) and $\pi^{12}$ (between $t_1$ and $t_2$) are computed with uniform marginals, squared-Euclidean cost, and regularization $\varepsilon=2\sigma^2\Delta t$, the heat-kernel choice that is principled for constant-diffusion gradient dynamics~\cite{lavenant2024toward}. Each trajectory is then sampled as a Markov chain along the two plans: a $t_0$ cell $i$ is drawn uniformly; a $t_1$ cell $j$ is drawn with probability $\pi^{01}_{ij}/\sum_{j'}\pi^{01}_{ij'}$; and the \emph{same} cell $j$ is then used as the conditioning cell for the second plan, with the $t_2$ cell $k$ drawn with probability $\pi^{12}_{jk}/\sum_{k'}\pi^{12}_{jk'}$. The resulting trajectory law, $\Pr(i,j,k)\propto\pi^{01}_{ij}\,\pi^{12}_{jk}$, is the composition of the two couplings through the shared $t_1$ cell---the standard way of chaining OT couplings into trajectories~\cite{schiebinger2019optimal}---so the $t_2$ cell is never drawn independently of the $t_1$ cell. Its $t_1$ marginal is the uniform snapshot distribution, because the column sums of the balanced plan are uniform. Within each seed, the snapshot populations, the true test trajectories, and both OT plans are regenerated. Every model is scored both on its own test split and on $1{,}000$ held-out true trajectories.
+
+\subsubsection*{OT-coupled pseudo-trajectories from the real data}
+For each lineage, $4{,}000$ cells per stage were subsampled once, and a $30$-component principal-component embedding of log-normalized expression over $2{,}000$ highly variable genes was computed. Couplings are computed in this transcriptome-wide embedding rather than in the $(P,D)$ space, so that the dependence they induce is not built from the target variables themselves. The $4{,}000$-cell pools and the embedding are fixed (computed once, from seed $0$). In each seed, a fresh subsample of $2{,}000$ cells per stage is drawn from these pools, entropic OT plans between consecutive stages are recomputed on that subsample (squared-Euclidean cost normalized by its median, $\varepsilon=0.05$, the Waddington-OT default~\cite{schiebinger2019optimal}), and trajectories are sampled along the chain exactly as above. The seeds therefore represent variation in the cell subsample, the resulting coupling, the trajectory draws, the data split, and model training, but not in the embedding. The same cells also yield independently paired trajectories, so the two constructions differ only in the coupling. No ground truth exists here: an advantage under OT coupling shows that the protocol detects the dependence the coupling induces, not that this dependence is biological.
+
+\subsection*{Implementation and reproducibility}
+\label{subsec:impl_repro}
+
+All preprocessing and trajectory construction are seeded and serialized; every model consumes the same per-seed trajectories and split. Every figure and table value is generated programmatically from the per-seed JSON outputs: no reported number is entered by hand. This enables exact re-execution and one-command regeneration of all quantitative results, and it is the mechanism by which the leakage that affected the original analysis~\cite{kanu2026transformer} was both detected and prevented from recurring. The implementation stack is summarized in Table~\ref{tab:impl_repro}.
+
+\begin{table}[!ht]
+\centering
+\caption{\textbf{Implementation stack and reproducibility controls.}}
+\label{tab:impl_repro}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.30\linewidth} >{\raggedright\arraybackslash}p{0.62\linewidth}}
+\thickhline
+\textbf{Component} & \textbf{Specification} \\
+\thickhline
+Environment A (original analyses: multi-seed comparisons, temporal controls, ODE calibration, representation sweep, leakage case study) & Python 3.14; package versions as recorded in the repository's \texttt{requirements.txt}: NumPy 2.4.3, SciPy 1.17.1, pandas 2.3.3, PyTorch 2.11.0 (CPU), scikit-learn 1.8.0, Scanpy 1.12.1, anndata 0.12.11, h5py 3.16.0, Matplotlib 3.10.8 \\
+\hline
+Environment B (revision analyses: constant baselines, positive controls, figures) & Python 3.12.10; NumPy 2.4.3, SciPy 1.17.1, pandas 2.3.3, PyTorch 2.11.0+cpu, scikit-learn 1.8.0, Scanpy 1.12.1, anndata 0.12.11, h5py 3.16.0, Matplotlib 3.10.8, POT 0.9.7.post1 \\
+\hline
+Cross-environment check & Ridge refitted in environment B on the regenerated per-seed data reproduces every stored per-seed MAE from environment A to within $10^{-16}$ on both lineages \\
+\hline
+ODE solver & \texttt{scipy.integrate.solve\_ivp} (RK45) \\
+\hline
+Calibration & Differential evolution (population-mean / distributional / per-trajectory) \\
+\hline
+Seeds & 20 seeds (10 for the $N=2{,}000$ positive controls); each perturbs trajectory construction \emph{and} model training \\
+\hline
+Statistics & Paired-bootstrap CI ($10^4$); Wilcoxon signed-rank; Cohen's $d_z$; Holm--Bonferroni \\
+\hline
+Datasets & Neural~\cite{jerber2021population}; cardiac \texttt{GSE175634}~\cite{elorbany2022single} \\
+\hline
+Normalization & Training-bounds min--max; clip to $[0,1]$ \\
+\hline
+Artifacts & Per-seed JSON metrics; every reported number generated by script from \texttt{results/} \\
+\thickhline
+\end{tabular}
+\end{table}
+
+
+\section*{Results}
+\label{sec:results}
+
+Proposition~\ref{prop:null} fixes what the independently paired benchmark can show before any model is trained: no model can beat the constant training median in expectation, transformations of the inputs cannot change attainable accuracy, and input-dependent flexibility can only add variance. The Results test these predictions and then ask whether the protocol can detect dependence when it is present. On independently paired data, the Transformer, a linear baseline, and a complexity-matched random forest are statistically equivalent on the neural (see ``\nameref{subsec:res_neural}'') and cardiac (see ``\nameref{subsec:res_cardiac}'') lineages, and all three are outperformed by the constant (see ``\nameref{subsec:res_constant}''); the temporal controls (see ``\nameref{subsec:res_temporal}''), the calibrated ODE (see ``\nameref{subsec:res_ode}''), and the representation sweep (see ``\nameref{subsec:res_sensitivity}'') are consistent with the same null. Positive controls then show that the same protocol detects recoverable dependence in simulation with known ground truth, and detects coupling-induced dependence on the real data (see ``\nameref{subsec:res_positive}''). A final case study shows how a leaky evaluation of the same benchmark reports the opposite of the null (see ``\nameref{subsec:res_leakage}'').
+
+\subsection*{On independently paired data, the Transformer matches both baselines}
+\label{subsec:res_neural}
+
+A single-seed estimate cannot distinguish a genuine effect from sampling variation introduced by pseudo-trajectory construction and model training. Repeating the full pipeline over $20$ seeds, each perturbing both randomness sources, yields the distributions in Fig~\ref{fig:raincloud}A and the paired comparisons in Fig~\ref{fig:forest} (neural). All three models occupy the same MAE range: Ridge $0.1774\pm0.0204$, the complexity-matched random forest $0.1794\pm0.0208$, and the Transformer $0.1787\pm0.0203$ (mean\,$\pm$\,s.d.\ over seeds). The paired differences against the Transformer are negligible and non-significant---Ridge $\overline{\Delta}=-0.0013$ ($d_z=-0.14$, $p=0.996$) and random forest $\overline{\Delta}=+0.0007$ ($d_z=+0.07$, $p=0.996$, Holm-corrected)---with $95\%$ confidence intervals on $\overline{\Delta}$ contained within the equivalence margin of $|\Delta|<0.01$ (Fig~\ref{fig:forest}). The comparisons therefore support equivalence rather than merely failing to reject a difference.
+
+\begin{figure}[!h]
+\caption{\textbf{The trained models' error distributions are superimposed; the constant's sits lower.} Test MAE over $n=20$ seeds for the constant training median, Ridge, the complexity-matched random forest, and the Transformer on the neural \textbf{(A)} and cardiac \textbf{(B)} lineages, shown as half-violin density, jittered per-seed points, and per-model mean (horizontal line). The three trained models overlap almost completely, and the seed-to-seed spread (s.d.\ $\approx0.020$ neural, $\approx0.017$ cardiac) dwarfs every between-model mean difference ($\le0.0021$), illustrating why a single-seed comparison cannot resolve a reliable ranking. The constant is lower on both lineages.}
+\label{fig:raincloud}
+\end{figure}
+
+\begin{figure}[!h]
+\caption{\textbf{The trained models are equivalent to one another, and all are beaten by a constant.} Paired difference $\Delta=\mathrm{MAE}_{\text{baseline}}-\mathrm{MAE}_{\text{Transformer}}$ ($n=20$ seeds) with percentile paired-bootstrap $95\%$ confidence intervals; positive values favour the Transformer's competitors. Annotations give Cohen's $d_z$ and Holm-corrected Wilcoxon signed-rank $p$. The shaded band marks the equivalence region $|\Delta|<0.01$. For Ridge and the complexity-matched random forest, every interval on both lineages lies within the band, supporting statistical equivalence. The constant training median (purple) lies outside the band on the favourable side on both lineages: it is significantly better than the Transformer.}
+\label{fig:forest}
+\end{figure}
+
+Two features of Fig~\ref{fig:raincloud}A are worth noting. First, the three per-seed distributions are mutually superimposed, so no model is reliably ranked above another. Second, the seed-to-seed spread (s.d.\ $\approx 0.020$) is an order of magnitude larger than any between-model mean difference ($\le 0.0013$), which is precisely why a single-seed comparison was able to report a spurious ranking: the reported gap was smaller than the noise it was drawn from.
+
+The random forest here is tuned per seed by nested cross-validation over tree depth and leaf size, holding it to the same fair-complexity standard later applied to the mechanistic model (see ``\nameref{subsec:res_ode}''). An under-regularized fixed-depth forest appears modestly worse, but this reflects overfitting of a high-capacity learner on a small task with no input--target dependence rather than any Transformer advantage; the regularized forest performs no better than the constant training mean, like the linear baseline (see ``\nameref{subsec:res_constant}'').
+
+\subsection*{The equivalence replicates on an independent cardiac lineage}
+\label{subsec:res_cardiac}
+
+To distinguish a property of the task from a property of the neural dataset, the identical protocol was applied to an independent iPSC$\rightarrow$cardiomyocyte series (see ``\nameref{subsec:data_state}''). The equivalence replicates exactly (Fig~\ref{fig:raincloud}B, Fig~\ref{fig:forest} cardiac): Ridge $0.1100\pm0.0155$, random forest $0.1121\pm0.0175$, and Transformer $0.1100\pm0.0198$, with paired differences against the Transformer of $\overline{\Delta}\approx0$ for Ridge ($p=1.000$) and $+0.0021$ for the random forest ($d_z=+0.15$, $p=1.000$). Both intervals again fall within the equivalence margin. Across the two lineages and $40$ seeds, no trained model significantly outperforms the linear baseline.
+
+\subsection*{A constant predictor outperforms every trained model}
+\label{subsec:res_constant}
+
+Proposition~\ref{prop:null} predicts that, on independently paired pseudo-trajectories, no model can beat the constant training median of $s_{t_2}$. Scoring that constant on the identical per-seed splits confirms the prediction and goes further: the constant is not merely equivalent to the trained models but significantly \emph{better} than all of them on both lineages (Table~\ref{tab:constant}). On the cardiac lineage the constant has lower error than every model on all $20$ seeds, with paired differences of $+0.024$ to $+0.026$ MAE ($28$--$31\%$ of the constant's error; $d_z=2.4$--$3.9$; Holm-corrected $p<10^{-5}$). On the neural lineage it is better on $17$ of $20$ seeds, by $+0.010$ to $+0.012$ ($6$--$7\%$; $d_z=0.77$--$0.94$; $p<0.005$). None of these intervals lies within the equivalence margin.
+
+\begin{table}[!ht]
+\centering
+\caption{\textbf{Mean test MAE over $20$ seeds of the constant predictors and the trained models.} The constant training-median predictor and the constant training-mean predictor are both computed per seed from the normalized training targets (see ``\nameref{subsec:models}''). $\overline{\Delta}=\mathrm{MAE}_{\text{model}}-\mathrm{MAE}_{\text{constant}}$ is the paired difference from the constant median, with its percentile paired-bootstrap $95\%$ CI. Positive values favour the constant. All paired differences are significant (Wilcoxon signed-rank, Holm-corrected $p<0.005$).}
+\label{tab:constant}
+\begin{tabular}{lcccc}
+\thickhline
+ & \multicolumn{2}{c}{\textbf{Neural}} & \multicolumn{2}{c}{\textbf{Cardiac}} \\
+\textbf{Predictor} & \textbf{MAE} & $\overline{\Delta}$ [95\% CI] & \textbf{MAE} & $\overline{\Delta}$ [95\% CI] \\
+\thickhline
+Constant (median) & $0.1677$ & --- & $0.0859$ & --- \\
+\hline
+Constant (mean) & $0.1762$ & --- & $0.1091$ & --- \\
+\hline
+Ridge & $0.1774$ & $+0.0098$ [$0.0042$, $0.0149$] & $0.1100$ & $+0.0242$ [$0.0217$, $0.0270$] \\
+\hline
+Random Forest & $0.1794$ & $+0.0118$ [$0.0061$, $0.0172$] & $0.1121$ & $+0.0262$ [$0.0232$, $0.0297$] \\
+\hline
+Transformer & $0.1787$ & $+0.0110$ [$0.0063$, $0.0163$] & $0.1100$ & $+0.0241$ [$0.0198$, $0.0285$] \\
+\thickhline
+\end{tabular}
+\end{table}
+
+The size of the gap is explained by the loss functions rather than by overfitting. The trained models minimize squared error, whose input-independent optimum is the training \emph{mean}; scored as a constant, that mean reaches $0.1762$ (neural) and $0.1091$ (cardiac), essentially the MAE of Ridge, the random forest, and the Transformer. Their test errors are therefore consistent with predictions close to the input-independent training mean: the trained models behave as approximately input-independent predictors. (Test MAE alone does not show that their predictions are exactly constant, and prediction-variance diagnostics were not computed.) Under the absolute-error metric the median is optimal instead, and because the late-stage marginals are heavily skewed by mass at the lower bound (see ``\nameref{subsec:state}''), mean and median differ substantially. The ranking among the trained models thus carries no information about temporal modelling: all of them perform like the same input-independent reference, the training mean, which is the wrong constant for the evaluation metric.
+
+\subsection*{Temporal-order controls are consistent with the null}
+\label{subsec:res_temporal}
+
+If the Transformer were exploiting the stage ordering of the input, destroying that ordering should degrade its accuracy. It does not. Permuting the stage order within each input context (shuffle) or removing the positional encoding (no-PE) leaves test MAE unchanged on both lineages (Fig~\ref{fig:temporal}): shuffle-vs-ordered $\overline{\Delta}=-0.0002$ on the neural lineage ($p=0.87$) and $-0.0002$ on the cardiac lineage ($p=0.90$), with the no-PE ablation equally inert. The observed changes are of order $1$--$3\%$ of the seed-to-seed standard deviation, well inside the equivalence margin. The Transformer's accuracy therefore does not depend on the positional encoding or on a consistent input order.
+
+\begin{figure}[!h]
+\caption{\textbf{Destroying temporal order leaves accuracy unchanged.} Per-seed test MAE ($n=20$) for the Transformer under the ordered input, stage-order shuffle, and positional-encoding removal (no-PE) on the neural \textbf{(A)} and cardiac \textbf{(B)} lineages; faint lines are individual seeds and the bold bar is the per-condition mean. Shuffle-vs-ordered paired differences are $\overline{\Delta}=-0.0002$ ($p=0.87$, neural) and $-0.0002$ ($p=0.90$, cardiac), of order $1$--$3\%$ of the seed-to-seed standard deviation. Accuracy does not depend on positional information or a consistent input order; as the positive control shows, this control alone cannot establish the absence of temporal dependence.}
+\label{fig:temporal}
+\end{figure}
+
+This result is consistent with Proposition~\ref{prop:null}, but on its own it is weak evidence. The positive control (see ``\nameref{subsec:res_positive}'') shows that the same shuffle leaves accuracy essentially unchanged even when strong temporal dependence is present, because stage identity can be read from the values of the states. The firmer evidence is the constant baseline: because the pseudo-trajectories pair independently sampled cells across stages (see ``\nameref{subsec:traj}''), they contain no within-trajectory dependence for any model to learn. The Transformer matches the linear baseline not because it fails to function---its training converges normally---but because, as Proposition~\ref{prop:null} shows, the inputs carry no information about the target, so neither a sequence model nor any other regressor can improve on a constant (see ``\nameref{subsec:res_constant}'').
+
+\subsection*{A fairly calibrated mechanistic model provides no sample-level value}
+\label{subsec:res_ode}
+
+A mechanistic ODE might still encode useful dynamical priors absent from the data-driven models. To test this fairly rather than against a deliberately weak baseline, the ODE was calibrated under three regimes of increasing sample-level fidelity (see ``\nameref{subsec:ode_calib}'') and evaluated on the same held-out trajectories. The result is monotone and holds on both lineages: the fairer the sample-level calibration, the worse the prediction (Fig~\ref{fig:ode}). On the neural lineage the test MAE rises from $0.198$ (population-mean; $+12\%$ over Ridge) through $0.295$ (distributional; $+66\%$) to $0.370$ (per-trajectory; $+108\%$); on the cardiac lineage from $0.248$ ($+126\%$) through $0.258$ ($+135\%$) to $0.334$ ($+203\%$). Every regime, on both lineages, lies above the corresponding Ridge reference.
+
+\begin{figure}[!h]
+\caption{\textbf{Fairer sample-level calibration of the mechanistic model worsens prediction.} Test MAE ($n=20$ seeds, mean with s.d.\ whiskers) of the mechanistic ODE under three calibration regimes of increasing sample-level fidelity, for the neural (circles) and cardiac (squares) lineages; annotations give the increase over the corresponding Ridge baseline (dashed references). Error rises monotonically from population-mean to per-trajectory calibration on both lineages, the expected consequence of granting added freedom to fit the noise of independently paired cells.}
+\label{fig:ode}
+\end{figure}
+
+The monotonicity is the expected signature of the same mechanism identified in ``\nameref{subsec:res_temporal}''. Per-trajectory calibration grants the ODE the most freedom to fit each test trajectory's early step, but because the trajectories pair independent cells, that early step carries no information about the late state; the additional freedom fits noise and generalizes worse. Population-calibrated mechanistic priors thus provide no sample-level predictive value here, and increasing their sample-level fidelity actively harms forecasting. (This is a statement about population-level priors on pseudo-trajectory data, not a general verdict on mechanistic modeling.)
+
+\subsection*{The null is robust to the state representation}
+\label{subsec:res_sensitivity}
+
+Finally, to confirm that the equivalence does not hinge on the particular two-dimensional state, the Transformer-versus-Ridge comparison was recomputed across $38$ state-construction variants (leave-one-marker-out for every panel gene, median and $z$-score aggregation, and an enlarged neural panel), each over $20$ seeds (Fig~\ref{fig:sensitivity}). The paired gap is centred near zero throughout (mean $+0.0004$, range $[-0.0016,+0.0028]$, maximum $|d_z|=0.19$), and \emph{no} variant produces a statistically significant Transformer advantage ($0/38$). The conclusion is a property of the forecasting task, not of any specific feature definition. Per-feature errors show the expected lineage-specific difficulty pattern---the differentiation score is harder to predict than the pluripotency score on the cardiac lineage, and the reverse on the neural lineage---but model identity does not affect either component.
+
+\begin{figure}[!h]
+\caption{\textbf{The equivalence is invariant to the state representation.} Paired Transformer$-$Ridge MAE gap (point estimate with $95\%$ CI, $n=20$ seeds) for each of $38$ state-construction variants---per-gene leave-one-out, median and $z$-score aggregation, and an enlarged neural panel---sorted by gap; circles, neural ($15$ variants); squares, cardiac ($23$). Every interval lies within the equivalence margin $|\Delta|<0.01$ and no variant significantly favours the Transformer ($0/38$), establishing the result as a property of the task rather than of any particular feature definition.}
+\label{fig:sensitivity}
+\end{figure}
+
+\subsection*{Positive controls: recovering the null and detecting dependence}
+\label{subsec:res_positive}
+
+\subsubsection*{Simulation with a known coupling}
+On simulated differentiation (Eq~\ref{eq:sde}), the protocol separates the three constructions sharply (Fig~\ref{fig:positive}A). Trained on true trajectories, every model reduces held-out error to roughly a fifth of the constant's (Ridge $0.053$, random forest $0.045$, Transformer $0.048$ versus $0.236$ at $N=200$; Holm-corrected $p<10^{-5}$ for each). Trained on independently paired snapshot cells, no model improves significantly on the constant, whether scored on its own test split or on true trajectories (all Holm-corrected $p>0.2$), as Proposition~\ref{prop:null} requires. Trained on OT-coupled snapshot cells, the models recover nearly all of the oracle's accuracy when scored on held-out \emph{true} trajectories (Ridge $0.055$, random forest $0.048$, Transformer $0.051$), confirming that entropic OT reconstructs the coupling in this setting. With ten times more trajectories ($N=2{,}000$, $10$ seeds) the picture is unchanged: scored on true trajectories, models trained on true trajectories reach $0.040$--$0.048$ and models trained on OT-coupled trajectories $0.044$--$0.049$, against $0.226$ for the constant (all $p<0.01$), while independently paired training again yields no improvement (all Holm-corrected $p\ge0.48$). Two further observations bear directly on the main analysis. First, the Transformer is not better than the random forest even with strong genuine dependence; scored on true trajectories it is significantly worse whether trained on true or OT-coupled trajectories (paired Wilcoxon $p<0.01$). Second, the stage-order shuffle leaves the Transformer's error essentially unchanged even here (true coupling, $N=200$: $\overline{\Delta}=-0.0019$, $95\%$ CI $[-0.0042,\,0.0003]$; $N=2{,}000$: $+0.0003$, far inside the equivalence margin), because the two input stages differ systematically in their values and the model identifies their order from the values themselves. The shuffle control is therefore not sensitive to temporal dependence in this kind of data, and its null result in ``\nameref{subsec:res_temporal}'' carries little evidential weight on its own.
+
+\begin{figure}[!h]
+\caption{\textbf{Recovering the null and detecting dependence.} \textbf{(A)} Simulated differentiation from a gradient SDE: test MAE (mean\,$\pm$\,s.d.\ over seeds) on held-out \emph{true} trajectories for models trained on true trajectories, independently paired snapshot cells, or OT-coupled snapshot cells; filled markers $N=200$ ($20$ seeds), open markers $N=2{,}000$ ($10$ seeds). With known ground truth, independent pairing yields no improvement on the constant, whereas OT-coupled training recovers most of the oracle's accuracy. \textbf{(B)} Real data: paired difference between each model and the training-mean constant (the input-free optimum of the squared-error training loss), with $95\%$ bootstrap CIs, under independent and OT coupling; circles neural, squares cardiac; filled $N=200$, open $N=2{,}000$. Shaded band, equivalence margin $|\Delta|<0.01$. Negative values indicate that the model extracts information from its inputs, which occurs only under OT coupling; on real data this reflects dependence induced by the coupling, which is not shown to be biological.}
+\label{fig:positive}
+\end{figure}
+
+\subsubsection*{OT-coupled pseudo-trajectories from the real data}
+Rebuilding the real-data pseudo-trajectories with OT couplings changes the outcome on both lineages (Fig~\ref{fig:positive}B). Because the trained models minimize squared error, the loss-matched reference for whether they use their inputs is the training-mean constant. Under independent pairing, no model differs significantly from that constant on either lineage or at either sample size: Ridge and the random forest are equivalent to it throughout (all CIs within $\pm0.0032$), as is the Transformer except on the cardiac lineage at $N=200$, where its wider interval ($[-0.0023,\,0.0130]$) extends beyond the margin. Under OT coupling, every model beats it on both lineages: at $N=200$ by $0.012$--$0.018$ MAE on the neural lineage (Holm-corrected $p<10^{-4}$) and by $0.012$--$0.013$ for Ridge and the random forest on the cardiac lineage ($p<0.001$; the Transformer's $0.006$ gain is not significant), and at $N=2{,}000$ by $0.014$--$0.018$ on both lineages (all $p<0.01$, the smallest attainable with $10$ seeds). With enough trajectories the gain is large enough to overcome the mean--median gap: at $N=2{,}000$ on the neural lineage every model beats even the constant median, by $0.010$--$0.012$ ($8$--$9\%$; $p<0.01$), and on the cardiac lineage the random forest ties it. The Transformer again never significantly outperforms the random forest (all paired $p>0.05$), and the shuffle again has no significant effect.
+
+Taken together, the three constructions support three distinct conclusions, which should not be conflated. \emph{Independent pairing}: the protocol correctly recovers the analytical null of Proposition~\ref{prop:null}, in simulation and on both real lineages. \emph{Simulation}: with known particle trajectories, the protocol detects temporal dependence that is genuinely present and recoverable, and OT-coupled training recovers most of it when scored against ground truth. \emph{Real-data OT coupling}: the protocol detects the dependence that the chosen coupling induces between stages; because that dependence is inferred under modelling assumptions rather than observed, this shows that the protocol responds to coupling, not that OT-coupled forecasts reflect biological forecasting ability. What these results do establish is that the protocol is not biased toward reporting nulls, so the null of the main analysis is a property of independent pairing, not of the protocol, the two-dimensional state, or the sample size.
+
+\subsection*{Case study: a leaky evaluation reports the opposite}
+\label{subsec:res_leakage}
+
+The protocol's safeguards matter in practice. Re-running the evaluation pipeline of our own earlier study~\cite{kanu2026transformer} for its single seed yields a test MAE of $0.081$ for the Transformer against $0.100$ for the best classical baseline, an apparent $+19.4\%$ advantage. The gap arises from inconsistent index handling that let $22$ of the Transformer's $30$ nominal test trajectories appear in its training set, while the baselines were scored leakage-free (details below). Re-scoring every model on the identical trajectories under one consistent split inverts the advantage to $-2.0\%$ (Table~\ref{tab:leakage}). On independently paired data, where Proposition~\ref{prop:null} rules out any genuine advantage, a gain of this size can only come from the evaluation; each of the safeguards used here---one split shared by all models, programmatic generation of every reported number, and a constant baseline that no model should beat---is sufficient to expose it.
+
+\begin{table}[!ht]
+\centering
+\caption{\textbf{Single-seed MAE on the neural lineage under the leaky evaluation and after re-scoring all models on the identical frozen trajectories with a consistent split.} The apparent advantage inverts once the leakage is removed.}
+\label{tab:leakage}
+\begin{tabular}{lcc}
+\thickhline
+\textbf{Model} & \textbf{Leaky eval.} & \textbf{Leakage-free} \\
+\thickhline
+Ridge & 0.100 & 0.0843 \\
+\hline
+Random Forest & 0.102 & 0.0954 \\
+\hline
+Transformer & 0.081 & 0.0861 \\
+\hline
+Mechanistic ODE & 0.433 & 0.4147 \\
+\hline
+\textbf{Transformer vs.\ best baseline} & \textbf{+19.4\%} & \textbf{$-2.0\%$} \\
+\thickhline
+\end{tabular}
+\end{table}
+
+% Formerly Appendix A ("Leakage case study: index handling") of sn-article.tex.
+The earlier study's pipeline~\cite{kanu2026transformer} illustrates a general reproducibility failure: a model can appear superior when different predictors are evaluated on inconsistent trajectory indices. The Transformer was trained on a permuted partition of the $N=200$ trajectories but evaluated on a contiguous tail slice of the trajectory array that ignored the permutation, whereas the classical baselines were trained and scored on consistent, permuted partitions. Because the permuted training set draws roughly $70\%$ of all trajectory indices, the contiguous ``test'' slice overlaps heavily with training: $22$ of $30$ nominal test trajectories had been seen during training (Fig~\ref{fig:leakage}). The Transformer was therefore evaluated largely on its own training data while the baselines were not, producing a \emph{relative} advantage that survives a casual comparison with baselines. The corrected protocol permutes indices once per seed and uses the resulting disjoint index sets identically for every model (see ``\nameref{subsec:protocol}''); \texttt{fair\_comparison.py} reproduces both evaluations from the frozen trajectories. This case study shows why benchmark implementations should make index membership explicit and apply identical splits to every model.
+
+\begin{figure}[!h]
+\caption{\textbf{The reported advantage originates in train--test leakage.} Trajectory-index membership for the $n=200$ pseudo-trajectories under the original (left) and corrected (right) splits. \emph{Left:} the model is trained on a permuted partition (blue) but evaluated on a contiguous tail slice (test, leaky); because the permuted training set spans $\sim$70\% of indices, $22$ of $30$ nominal test trajectories also appear in training (``in BOTH'', red). \emph{Right:} a single permutation yields disjoint train/validation/test blocks with no overlap. Only the Transformer was affected by the original asymmetry; all baselines were scored leakage-free.}
+\label{fig:leakage}
+\end{figure}
+
+\section*{Discussion}
+\label{sec:discussion}
+
+This study asked what a single-cell forecasting benchmark can and cannot detect. The answer depends on how cells are linked across time far more than on which model is used. On independently paired pseudo-trajectories, a Transformer, a random forest, and a ten-parameter linear model are statistically equivalent, and all three are significantly outperformed by a constant that ignores the inputs entirely; the $+19.4\%$ advantage obtained under a leaky, single-seed evaluation inverted to a $2\%$ deficit once the evaluation was corrected. With a simulated process of known coupling, the identical protocol detects genuinely recoverable dependence; when the real data are linked by optimal-transport couplings, it detects the dependence those couplings induce, which is not thereby shown to be biological.
+
+\subsection*{Independent pairing makes the benchmark a null by construction}
+The pseudo-trajectory construction used in the original study~\cite{kanu2026transformer} pairs independently sampled cells across stages. This is not how cross-sectional time courses are usually linked---optimal-transport methods instead infer a coupling between time points~\cite{schiebinger2019optimal}---but it is the simplest construction available when no lineage information is measured. Independent pairing makes the late state independent of the two earlier states, so its conditional distribution equals its marginal and the optimal forecast is a constant: the marginal median under absolute error (Proposition~\ref{prop:null}). Every result follows from this, and it is confirmed directly: the constant median outperforms every trained model on both lineages (Table~\ref{tab:constant}), while the trained models perform no better than the training mean that their squared-error loss favours. The Transformer matches the linear model because both behave as approximately input-independent predictors (Fig~\ref{fig:forest}); destroying stage order changes nothing because the inputs were never informative (Fig~\ref{fig:temporal}); and the mechanistic ODE worsens monotonically as calibration is made fairer because added flexibility fits the noise of independently paired cells rather than signal (Fig~\ref{fig:ode}). The same excess-flexibility-fits-noise effect explains why an under-regularized random forest appears worse until it is properly regularized. A high-capacity model on this task is, at best, harmless and, at worst, actively misled. Proposition~\ref{prop:null} makes this outcome predictable before any experiment; the empirical analyses are valuable not as a discovery of the null but as a check that the protocol reports it correctly, and as a demonstration of how a leaky evaluation reports the opposite.
+
+\subsection*{Coupling, not capacity, sets what can be detected}
+The positive controls separate two questions that the original design conflated: whether the benchmark contains temporal information, and whether a given model can use it. The first is decided entirely by the coupling. The same cells, the same state representation, and the same models move from a null to a clear, significant advantage over the input-free baseline when independent pairing is replaced by OT coupling, on both lineages and at both sample sizes---an advantage that reflects the dependence the coupling induces, whose biological validity these data cannot establish. The second question has a consistent answer across every setting examined: the Transformer was never significantly better than the random forest, and was significantly worse in simulation, even with strong genuine dependence and ten times more trajectories. The data-hungry architecture was therefore not limited by the original sample size of $200$; on a two-stage, two-dimensional input, the dependence that exists is captured as well or better by a random forest or a linear model.
+
+\subsection*{This is not an indictment of Transformers}
+The Transformer trains stably and, in the main analysis, is statistically equivalent to Ridge on both lineages; it simply has no structural advantage to express on a short, low-dimensional input. The difficulty lies not in the architecture but in evaluating any model on a task whose construction precludes the signal it targets---compounded, when present, by leakage and single-seed reporting that together can manufacture an apparent gain. These are evaluation failures, and they are correctable.
+
+\subsection*{Implications for single-cell forecasting practice}
+Four practices would have surfaced the problem immediately and are inexpensive to adopt. First, leakage-safe evaluation with a single, consistent split shared identically across models; the asymmetry here arose entirely from an inconsistency affecting only one model. Second, multi-seed reporting with paired effect sizes and equivalence reasoning rather than single-seed point estimates; the spurious ranking was smaller than the seed-to-seed noise it was drawn from, and no honest comparison at $n=1$ seed was possible. Third, controls should be validated before they are trusted: the stage-order shuffle used here proved insensitive in the positive control, because stage identity can be read from the state values, so an unchanged error under shuffling is not evidence against temporal structure. A shuffle can be informative only when stages cannot be distinguished from their values. Fourth, an input-independent baseline---the training median of the target, matched to the evaluation metric---should be reported alongside any learned model. It is the optimum when the inputs carry no information about the target, and here it would have revealed at once that no model, linear or otherwise, was using the inputs. A learned model must be shown to exceed this constant, not merely a linear regressor, before any forecasting ability is claimed.
+
+\subsection*{Limitations and scope}
+Several limitations bound these conclusions. First, the forecasting target is a two-dimensional marker-program state, a strong compression of a transcriptome of tens of thousands of genes. The null result does not depend on it---Proposition~\ref{prop:null} holds for any representation of independently paired cells, and the $38$-variant sweep and OT couplings computed in a transcriptome-wide gene-expression embedding agree---but the positive-control results describe forecasting of this compressed state only, not of full expression profiles. Second, the dependence induced by OT coupling on the real data is inferred under modelling assumptions rather than observed, so a model advantage there shows that the protocol responds to coupling, not that OT forecasts are biologically correct; settings with measured lineage, such as barcoded time courses~\cite{weinreb2020lineage}, are needed for that. Third, the stages are days to weeks apart, far longer than the hours resolved by RNA velocity or metabolic labelling (Table~\ref{tab:rigor}), so any temporal information must come from the coupling rather than from within-cell kinetics. Fourth, models are trained with squared error but scored by absolute error, and point predictions are evaluated rather than predicted distributions; the mean- and median-constant references make the first explicit, and distributional metrics would be a natural extension. Finally, the $N=2{,}000$ analyses use $10$ rather than $20$ seeds, which limits the smallest attainable $p$-value but not the direction or size of the effects.
+
+\section*{Conclusion}
+\label{sec:conclusion}
+Whether a single-cell forecasting benchmark can reveal any model's skill is decided by how cells are coupled across time. When cells are paired independently, the late stage is independent of the earlier ones and the optimal forecast is a constant; across two differentiation lineages, a Transformer, a random forest, and a linear model were statistically equivalent and all were outperformed by the training median, and an apparent Transformer advantage traced to train--test leakage. With a simulated process of known coupling, the identical protocol detects genuinely recoverable dependence, and when the real cells are coupled by optimal transport it detects the dependence that coupling induces---in neither case finding an advantage for the Transformer over a random forest. Model capacity did not determine what could be learned; the coupling did. Forecasting benchmarks built on cross-sectional snapshots should therefore state their coupling, compare every model with an input-independent baseline matched to the evaluation metric, evaluate leakage-safely over many seeds with explicit equivalence tests, and validate their controls in settings where temporal dependence is known to exist. Only an evaluation that can fail to find an effect, and has been shown able to find one, can credibly report either.
+
+% -------------------------------------------------------------------------
+% PLOS collects the following in Editorial Manager, not in the manuscript.
+% Text carried over from sn-article.tex for pasting into the submission form.
+%
+% DATA AVAILABILITY:
+% The dopaminergic-neuron differentiation scRNA-seq data are from Jerber et al. (2021). Open-access
+% count data are available in the European Nucleotide Archive (ENA) under study accession ERP121676
+% (BioProject PRJEB38269; https://www.ebi.ac.uk/ena/browser/view/PRJEB38269); genotype-linked data are
+% under managed access in the European Genome-phenome Archive (EGA) under study EGAS00001002885; and
+% processed per-timepoint count files are deposited on Zenodo (https://zenodo.org/record/4333872). The
+% cardiomyocyte differentiation data are available from the Gene Expression Omnibus under accession
+% GSE175634 (https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE175634) (Elorbany et al. 2022). No new
+% sequencing data were generated in this study.
+% All source code required to reproduce the analyses, figures, and tables -- including the leakage-safe
+% trajectory construction, the multi-seed evaluation pipeline, all model implementations, and the
+% per-seed metric outputs from which every reported value is derived -- is openly available at
+% https://github.com/xaviwho/leakage-safe-benchmark. The repository includes pinned dependency
+% specifications, the derived per-seed result files, and scripts that regenerate each figure and table
+% directly from those files. The repository also contains the per-cell embeddings used for the
+% optimal-transport couplings, so the real-data positive controls can be rerun without the raw count
+% matrices. The code is released under the MIT license.
+%   Project name: Leakage-Safe Benchmark for Single-Cell Differentiation Forecasting
+%   Project home page: https://github.com/xaviwho/leakage-safe-benchmark
+%   Operating system(s): Platform independent
+%   Programming language: Python (3.14 for the original analyses; 3.12.10 for the revision analyses)
+%   Other requirements: NumPy 2.4.3, SciPy 1.17.1, pandas 2.3.3, PyTorch 2.11.0 (CPU), scikit-learn 1.8.0,
+%     Scanpy 1.12.1, anndata 0.12.11, h5py 3.16.0, Matplotlib 3.10.8, POT 0.9.7.post1, PyYAML 6.0.3
+%     (pinned in requirements.txt)
+%   License: MIT
+%   Any restrictions to use by non-academics: None
+%
+% FUNDING (financial disclosure):
+% This work was partly supported by Innovative Human Resource Development for Local Intellectualization
+% program through the IITP grant funded by the Korea government (MSIT) (IITP-2026-RS-2020-II201612, 25%)
+% and by Priority Research Centers Program through the NRF funded by the MEST (2018R1A6A1A03024003, 25%)
+% and by the MSIT, Korea, under the ITRC support program (IITP-2026-RS-2024-00438430, 25%) and by Basic
+% Science Research Program through the National Research Foundation of Korea(NRF) funded by the Ministry
+% of Education(RS-2025-25431637, 25%).
+% -------------------------------------------------------------------------
+
+% Acknowledgments: PLOS reserves this section for general thanks only; the original
+% acknowledgment was entirely funding, which goes in the financial disclosure above.
+
+\nolinenumbers
+
+\bibliography{sn-bibliography}
+
+\end{document}
