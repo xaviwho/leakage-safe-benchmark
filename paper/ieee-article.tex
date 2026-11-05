@@ -75,6 +75,14 @@ This study closes that gap. A single, leakage-safe protocol is applied to two in
 
 On independently paired data, the protocol recovers the known null. Under leakage-safe evaluation the Transformer is statistically equivalent to a ten-parameter linear model and to the complexity-matched random forest, on both lineages; destroying stage order leaves its accuracy unchanged; and a fairly calibrated mechanistic model provides no sample-level benefit, degrading monotonically as its calibration is made fairer. A single mechanism accounts for all of these results: in pseudo-trajectories built from independently sampled cells the early stages carry no information about the late stage, so the optimal forecast is a constant. Consistent with this, the constant median predictor outperforms every trained model on both lineages; the trained models instead perform no better than the training mean, the input-independent optimum of the squared-error loss they are trained with, and so behave as approximately input-independent predictors.  The contribution is therefore less any single negative result than the evaluation protocol that exposes it.
 
+\begin{figure*}[!htbp]
+\centering
+\includegraphics[width=0.99\textwidth]{figures/method_design.png}
+\caption{\textbf{Overview of the leakage-safe, multi-seed, equivalence-tested forecasting benchmark.}
+An identical protocol is applied to two iPSC differentiation lineages (neural, dopaminergic; cardiac, \texttt{GSE175634}), reducing scRNA-seq to a 2-D pluripotency--differentiation state and assembling stage-ordered pseudo-trajectories ($N=200$ per seed). All models share a leakage-safe $70/15/15$ split, evaluated over $20$ seeds that reseed both trajectory construction and training, and compared by paired $\Delta$MAE with bootstrap CIs, Wilcoxon tests, and an equivalence band $|\Delta|<0.01$. Four predictors (Ridge, complexity-matched random forest, Transformer, mechanistic ODE) are assessed as peers alongside temporal-order and representation controls. Arrow colors denote the data, rigor, model, control, and verdict flows.}
+\label{fig:system}
+\end{figure*}
+
 The main contributions are:
 \begin{itemize}
     \item An analytical null for independently paired pseudo-trajectories (Proposition~\ref{prop:null}) and its empirical confirmation: every trained model performs no better than the constant training mean and is outperformed by the metric-matched constant training median, on two lineages.
@@ -83,13 +91,6 @@ The main contributions are:
     \item Practical findings for benchmark design: the Transformer never significantly outperformed a random forest, with or without genuine dependence; a stage-order shuffle control is insensitive when stages are distinguishable by value; and MSE-trained models scored by MAE should be compared with the metric-matched constant.
 \end{itemize}
 
-\begin{figure*}[!htbp]
-\centering
-\includegraphics[width=0.99\textwidth]{figures/method_design.png}
-\caption{\textbf{Overview of the leakage-safe, multi-seed, equivalence-tested forecasting benchmark.}
-An identical protocol is applied to two iPSC differentiation lineages (neural, dopaminergic; cardiac, \texttt{GSE175634}), reducing scRNA-seq to a 2-D pluripotency--differentiation state and assembling stage-ordered pseudo-trajectories ($N=200$ per seed). All models share a leakage-safe $70/15/15$ split, evaluated over $20$ seeds that reseed both trajectory construction and training, and compared by paired $\Delta$MAE with bootstrap CIs, Wilcoxon tests, and an equivalence band $|\Delta|<0.01$. Four predictors (Ridge, complexity-matched random forest, Transformer, mechanistic ODE) are assessed as peers alongside temporal-order and representation controls. Arrow colors denote the data, rigor, model, control, and verdict flows.}
-\label{fig:system}
-\end{figure*}
 
 \begin{table*}[!t]
 \centering
