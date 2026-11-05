@@ -201,7 +201,7 @@ Whether a sequence model behaves as Proposition~\ref{prop:null} predicts is chec
 
 Algorithm~\ref{alg:traj_norm} formalizes the construction together with the leakage-safe normalization, written as the per-seed procedure actually executed: trajectory sampling, training-only split, training-bounds estimation, and normalization are all driven by a seed that is varied across runs (Sec.~\ref{subsec:protocol}).
 
-\begin{algorithm*}[!t]
+\begin{algorithm}[!t]
 \small
 \caption{Per-Seed Pseudo-Trajectory Construction and Leakage-Safe Normalization}
 \label{alg:traj_norm}
@@ -244,7 +244,7 @@ $\mathcal{B}\leftarrow \{P_{\min}^{\mathrm{tr}},P_{\max}^{\mathrm{tr}},D_{\min}^
 }
 \BlankLine
 \Return $(\mathcal{T},\mathcal{I}_{\mathrm{tr}},\mathcal{I}_{\mathrm{val}},\mathcal{I}_{\mathrm{te}},\mathcal{B})$
-\end{algorithm*}
+\end{algorithm}
 
 \subsection{Multi-Seed Evaluation Protocol and Statistics}
 \label{subsec:protocol}
