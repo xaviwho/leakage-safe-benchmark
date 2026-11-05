@@ -410,6 +410,13 @@ Proposition~\ref{prop:null} predicts that, on independently paired pseudo-trajec
 \label{fig:raincloud}
 \end{figure*}
 
+\begin{figure*}[!t]
+\centering
+\includegraphics[width=0.92\textwidth]{figures/fig4_temporal.png}
+\caption{\textbf{Destroying temporal order leaves accuracy unchanged.} Per-seed test MAE ($n=20$) for the Transformer under the ordered input, stage-order shuffle, and positional-encoding removal (no-PE) on the neural \textbf{(A)} and cardiac \textbf{(B)} lineages; faint lines are individual seeds and the bold bar is the per-condition mean. Shuffle-vs-ordered paired differences are $\overline{\Delta}=-0.0002$ ($p=0.87$, neural) and $-0.0002$ ($p=0.90$, cardiac), of order $1$--$3\%$ of the seed-to-seed standard deviation. Accuracy does not depend on positional information or a consistent input order; as the positive control shows, this control alone cannot establish the absence of temporal dependence.}
+\label{fig:temporal}
+\end{figure*}
+
 The size of the gap is explained by the loss functions rather than by overfitting. The trained models minimize squared error, whose input-independent optimum is the training \emph{mean}; scored as a constant, that mean reaches $0.1762$ (neural) and $0.1091$ (cardiac), essentially the MAE of Ridge, the random forest, and the Transformer. Their test errors are therefore consistent with predictions close to the input-independent training mean: the trained models behave as approximately input-independent predictors. (Test MAE alone does not show that their predictions are exactly constant, and prediction-variance diagnostics were not computed.) Under the absolute-error metric the median is optimal instead, and because the late-stage marginals are heavily skewed by mass at the lower bound (Sec.~\ref{subsec:state}), mean and median differ substantially. The ranking among the trained models thus carries no information about temporal modelling: all of them perform like the same input-independent reference, the training mean, which is the wrong constant for the evaluation metric.
 
 \begin{table*}[!t]
@@ -442,12 +449,7 @@ If the Transformer were exploiting the stage ordering of the input, destroying t
 
 This result is consistent with Proposition~\ref{prop:null}, but on its own it is weak evidence. The positive control (Sec.~\ref{subsec:res_positive}) shows that the same shuffle leaves accuracy essentially unchanged even when strong temporal dependence is present, because stage identity can be read from the values of the states. The firmer evidence is the constant baseline: because the pseudo-trajectories pair independently sampled cells across stages (Sec.~\ref{subsec:traj}), they contain no within-trajectory dependence for any model to learn. The Transformer matches the linear baseline not because it fails to function---its training converges normally---but because, as Proposition~\ref{prop:null} shows, the inputs carry no information about the target, so neither a sequence model nor any other regressor can improve on a constant (Sec.~\ref{subsec:res_constant}).
 
-\begin{figure*}[!t]
-\centering
-\includegraphics[width=0.92\textwidth]{figures/fig4_temporal.png}
-\caption{\textbf{Destroying temporal order leaves accuracy unchanged.} Per-seed test MAE ($n=20$) for the Transformer under the ordered input, stage-order shuffle, and positional-encoding removal (no-PE) on the neural \textbf{(A)} and cardiac \textbf{(B)} lineages; faint lines are individual seeds and the bold bar is the per-condition mean. Shuffle-vs-ordered paired differences are $\overline{\Delta}=-0.0002$ ($p=0.87$, neural) and $-0.0002$ ($p=0.90$, cardiac), of order $1$--$3\%$ of the seed-to-seed standard deviation. Accuracy does not depend on positional information or a consistent input order; as the positive control shows, this control alone cannot establish the absence of temporal dependence.}
-\label{fig:temporal}
-\end{figure*}
+
 
 \subsection{A Fairly Calibrated Mechanistic Model Provides No Sample-Level Value}
 \label{subsec:res_ode}
