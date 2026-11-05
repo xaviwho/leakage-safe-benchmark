@@ -174,7 +174,7 @@ giving the stage state $s_t=[P_t,D_t]\in[0,1]^2$, where $z_{\min}^{\mathrm{tr}},
 \subsection{Pseudo-Trajectory Construction and Its Encoded Assumption}
 \label{subsec:traj}
 
-Because the datasets do not provide lineage-resolved observations linking the same cell across stages, fixed-length sequences are assembled by sampling one cell independently (with replacement) per stage and concatenating their states under ground-truth stage ordering:
+Because the datasets do not provide lineage-resolved observations linking the same cell across stages, fixed-length sequences are assembled by sampling one cell independently (with replacement) per stage and concatenating their states in the known stage order:
 \begin{equation}
 x^{(i)}=\big[s_{t_0}^{(i)},\,s_{t_1}^{(i)},\,s_{t_2}^{(i)}\big],
 \qquad i=1,\dots,N,\;\; N=200,
@@ -182,7 +182,7 @@ x^{(i)}=\big[s_{t_0}^{(i)},\,s_{t_1}^{(i)},\,s_{t_2}^{(i)}\big],
 \end{equation}
 giving a $200\times 3\times 2$ tensor per seed.
 
-It is essential to state plainly what this construction does and does not represent, because the interpretation of every downstream result depends on it. Each $x^{(i)}$ is a \emph{population-level pseudo-trajectory}: its three states are independent draws from three marginal stage distributions, stitched together by stage order alone. It is \emph{not} a tracked single-cell lineage. Consequently the only temporal information present in $x^{(i)}$ is the ordering of three otherwise statistically independent samples, and the prediction target $\hat{s}_{t_2}=f(s_{t_0},s_{t_1})$ is a stage-level marker-state distribution rather than the future of any individual cell. This independence has a direct analytical consequence, which defines what any model can achieve on such data.
+It is essential to state plainly what this construction does and does not represent, because the interpretation of every downstream result depends on it. Each $x^{(i)}$ is a \emph{population-level pseudo-trajectory}: its three states are independent draws from the marginal distributions of the three stages, assembled according to stage order alone. It is \emph{not} a tracked single-cell lineage. Consequently, the only temporal information present in $x^{(i)}$ is the ordering of three otherwise statistically independent samples. The target $s_{t_2}$ is a draw from the late-stage marker-state distribution, not the future state of any individual cell. This independence has a direct analytical consequence, which defines what any model can achieve on such data.
 
 \begin{proposition}[Independent pairing implies a constant optimal predictor]
 \label{prop:null}
