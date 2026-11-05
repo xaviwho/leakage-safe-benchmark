@@ -403,6 +403,13 @@ To distinguish a property of the task from a property of the neural dataset, the
 
 Proposition~\ref{prop:null} predicts that, on independently paired pseudo-trajectories, no model can beat the constant training median of $s_{t_2}$. Scoring that constant on the identical per-seed splits confirms the prediction and goes further: the constant is not merely equivalent to the trained models but significantly \emph{better} than all of them on both lineages (Table~\ref{tab:constant}). On the cardiac lineage the constant has lower error than every model on all $20$ seeds, with paired differences of $+0.024$ to $+0.026$ MAE ($28$--$31\%$ of the constant's error; $d_z=2.4$--$3.9$; Holm-corrected $p<10^{-5}$). On the neural lineage it is better on $17$ of $20$ seeds, by $+0.010$ to $+0.012$ ($6$--$7\%$; $d_z=0.77$--$0.94$; $p<0.005$). None of these intervals lies within the equivalence margin.
 
+\begin{figure*}[!t]
+\centering
+\includegraphics[width=0.92\textwidth]{figures/fig3_raincloud.png}
+\caption{\textbf{The trained models' error distributions are superimposed; the constant's sits lower.} Test MAE over $n=20$ seeds for the constant training median, Ridge, the complexity-matched random forest, and the Transformer on the neural \textbf{(A)} and cardiac \textbf{(B)} lineages, shown as half-violin density, jittered per-seed points, and per-model mean (horizontal line). The three trained models overlap almost completely, and the seed-to-seed spread (s.d.\ $\approx0.020$ neural, $\approx0.017$ cardiac) dwarfs every between-model mean difference ($\le0.0021$), illustrating why a single-seed comparison cannot resolve a reliable ranking. The constant is lower on both lineages.}
+\label{fig:raincloud}
+\end{figure*}
+
 The size of the gap is explained by the loss functions rather than by overfitting. The trained models minimize squared error, whose input-independent optimum is the training \emph{mean}; scored as a constant, that mean reaches $0.1762$ (neural) and $0.1091$ (cardiac), essentially the MAE of Ridge, the random forest, and the Transformer. Their test errors are therefore consistent with predictions close to the input-independent training mean: the trained models behave as approximately input-independent predictors. (Test MAE alone does not show that their predictions are exactly constant, and prediction-variance diagnostics were not computed.) Under the absolute-error metric the median is optimal instead, and because the late-stage marginals are heavily skewed by mass at the lower bound (Sec.~\ref{subsec:state}), mean and median differ substantially. The ranking among the trained models thus carries no information about temporal modelling: all of them perform like the same input-independent reference, the training mean, which is the wrong constant for the evaluation metric.
 
 \begin{table*}[!t]
@@ -427,13 +434,6 @@ Transformer & $0.1787$ & $+0.0110$ [$0.0063$, $0.0163$] & $0.1100$ & $+0.0241$ [
 \end{table*}
 
 
-
-\begin{figure*}[!t]
-\centering
-\includegraphics[width=0.92\textwidth]{figures/fig3_raincloud.png}
-\caption{\textbf{The trained models' error distributions are superimposed; the constant's sits lower.} Test MAE over $n=20$ seeds for the constant training median, Ridge, the complexity-matched random forest, and the Transformer on the neural \textbf{(A)} and cardiac \textbf{(B)} lineages, shown as half-violin density, jittered per-seed points, and per-model mean (horizontal line). The three trained models overlap almost completely, and the seed-to-seed spread (s.d.\ $\approx0.020$ neural, $\approx0.017$ cardiac) dwarfs every between-model mean difference ($\le0.0021$), illustrating why a single-seed comparison cannot resolve a reliable ranking. The constant is lower on both lineages.}
-\label{fig:raincloud}
-\end{figure*}
 
 \subsection{Temporal-Order Controls Are Consistent With the Null}
 \label{subsec:res_temporal}
