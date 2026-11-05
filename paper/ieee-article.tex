@@ -542,6 +542,13 @@ Several limitations bound these conclusions. First, the forecasting target is a 
 \label{sec:conclusion}
 Whether a single-cell forecasting benchmark can reveal any model's skill is decided by how cells are coupled across time. When cells are paired independently, the late stage is independent of the earlier ones and the optimal forecast is a constant; across two differentiation lineages, a Transformer, a random forest, and a linear model were statistically equivalent and all were outperformed by the training median, and an apparent Transformer advantage traced to train--test leakage. With a simulated process of known coupling, the identical protocol detects genuinely recoverable dependence, and when the real cells are coupled by optimal transport it detects the dependence that coupling induces---in neither case finding an advantage for the Transformer over a random forest. Model capacity did not determine what could be learned; the coupling did. Forecasting benchmarks built on cross-sectional snapshots should therefore state their coupling, compare every model with an input-independent baseline matched to the evaluation metric, evaluate leakage-safely over many seeds with explicit equivalence tests, and validate their controls in settings where temporal dependence is known to exist. Only an evaluation that can fail to find an effect, and has been shown able to find one, can credibly report either.
 
+\begin{figure*}[!t]
+\centering
+\includegraphics[width=0.92\textwidth]{figures/fig1_leakage_panel.png}
+\caption{\textbf{The reported advantage originates in train--test leakage.} Trajectory-index membership for the $n=200$ pseudo-trajectories under the original (left) and corrected (right) splits. \emph{Left:} the model is trained on a permuted partition (blue) but evaluated on a contiguous tail slice (test, leaky); because the permuted training set spans $\sim$70\% of indices, $22$ of $30$ nominal test trajectories also appear in training (``in BOTH'', red). \emph{Right:} a single permutation yields disjoint train/validation/test blocks with no overlap. Only the Transformer was affected by the original asymmetry; all baselines were scored leakage-free.}
+\label{fig:leakage}
+\end{figure*}
+
 \section*{Availability of Data and Materials}
 
 The dopaminergic-neuron differentiation scRNA-seq data are from~\cite{jerber2021population}. Open-access count data are available in the European Nucleotide Archive (ENA) under study accession ERP121676 (BioProject PRJEB38269; \url{https://www.ebi.ac.uk/ena/browser/view/PRJEB38269}); genotype-linked data are under managed access in the European Genome--phenome Archive (EGA) under study EGAS00001002885; and processed per-timepoint count files are deposited on Zenodo (\url{https://zenodo.org/record/4333872}). The cardiomyocyte differentiation data are available from the Gene Expression Omnibus under accession GSE175634 (\url{https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE175634})~\cite{elorbany2022single}. No new sequencing data were generated in this study.
@@ -565,12 +572,7 @@ All source code required to reproduce the analyses, figures, and tables---includ
 
 The earlier study's pipeline~\cite{kanu2026transformer} illustrates a general reproducibility failure: a model can appear superior when different predictors are evaluated on inconsistent trajectory indices. The Transformer was trained on a permuted partition of the $N=200$ trajectories but evaluated on a contiguous tail slice of the trajectory array that ignored the permutation, whereas the classical baselines were trained and scored on consistent, permuted partitions. Because the permuted training set draws roughly $70\%$ of all trajectory indices, the contiguous ``test'' slice overlaps heavily with training: $22$ of $30$ nominal test trajectories had been seen during training (Fig.~\ref{fig:leakage}). The Transformer was therefore evaluated largely on its own training data while the baselines were not, producing a \emph{relative} advantage that survives a casual comparison with baselines. The corrected protocol permutes indices once per seed and uses the resulting disjoint index sets identically for every model (Sec.~\ref{subsec:protocol}); \texttt{fair\_comparison.py} reproduces both evaluations from the frozen trajectories. This case study shows why benchmark implementations should make index membership explicit and apply identical splits to every model.
 
-\begin{figure*}[!t]
-\centering
-\includegraphics[width=0.92\textwidth]{figures/fig1_leakage_panel.png}
-\caption{\textbf{The reported advantage originates in train--test leakage.} Trajectory-index membership for the $n=200$ pseudo-trajectories under the original (left) and corrected (right) splits. \emph{Left:} the model is trained on a permuted partition (blue) but evaluated on a contiguous tail slice (test, leaky); because the permuted training set spans $\sim$70\% of indices, $22$ of $30$ nominal test trajectories also appear in training (``in BOTH'', red). \emph{Right:} a single permutation yields disjoint train/validation/test blocks with no overlap. Only the Transformer was affected by the original asymmetry; all baselines were scored leakage-free.}
-\label{fig:leakage}
-\end{figure*}
+
 
 \ifCLASSOPTIONcompsoc
   \section*{Acknowledgments}
