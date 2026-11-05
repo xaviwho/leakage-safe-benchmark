@@ -83,6 +83,14 @@ The main contributions are:
     \item Practical findings for benchmark design: the Transformer never significantly outperformed a random forest, with or without genuine dependence; a stage-order shuffle control is insensitive when stages are distinguishable by value; and MSE-trained models scored by MAE should be compared with the metric-matched constant.
 \end{itemize}
 
+\begin{figure*}[!htbp]
+\centering
+\includegraphics[width=0.99\textwidth]{figures/method_design.png}
+\caption{\textbf{Overview of the leakage-safe, multi-seed, equivalence-tested forecasting benchmark.}
+An identical protocol is applied to two iPSC differentiation lineages (neural, dopaminergic; cardiac, \texttt{GSE175634}), reducing scRNA-seq to a 2-D pluripotency--differentiation state and assembling stage-ordered pseudo-trajectories ($N=200$ per seed). All models share a leakage-safe $70/15/15$ split, evaluated over $20$ seeds that reseed both trajectory construction and training, and compared by paired $\Delta$MAE with bootstrap CIs, Wilcoxon tests, and an equivalence band $|\Delta|<0.01$. Four predictors (Ridge, complexity-matched random forest, Transformer, mechanistic ODE) are assessed as peers alongside temporal-order and representation controls. Arrow colors denote the data, rigor, model, control, and verdict flows.}
+\label{fig:system}
+\end{figure*}
+
 \begin{table*}[!t]
 \centering
 \caption{Ways of linking cells across the time points of a differentiation time course, and what each implies for a benchmark that forecasts a late-stage state from earlier stages. The time scale matters: the stages forecast here are separated by days to weeks, whereas labelling and velocity resolve changes over hours. Only lineage-based links observe a dependence between time points directly; computational couplings impose one under modelling assumptions; independent pairing contains none.}
@@ -108,14 +116,6 @@ Lineage barcoding~\cite{weinreb2020lineage} & Heritable barcodes shared by clona
 \bottomrule
 \end{tabular}
 \end{table*}
-
-\begin{figure*}[!t]
-\centering
-\includegraphics[width=0.99\textwidth]{figures/method_design.png}
-\caption{\textbf{Overview of the leakage-safe, multi-seed, equivalence-tested forecasting benchmark.}
-An identical protocol is applied to two iPSC differentiation lineages (neural, dopaminergic; cardiac, \texttt{GSE175634}), reducing scRNA-seq to a 2-D pluripotency--differentiation state and assembling stage-ordered pseudo-trajectories ($N=200$ per seed). All models share a leakage-safe $70/15/15$ split, evaluated over $20$ seeds that reseed both trajectory construction and training, and compared by paired $\Delta$MAE with bootstrap CIs, Wilcoxon tests, and an equivalence band $|\Delta|<0.01$. Four predictors (Ridge, complexity-matched random forest, Transformer, mechanistic ODE) are assessed as peers alongside temporal-order and representation controls. Arrow colors denote the data, rigor, model, control, and verdict flows.}
-\label{fig:system}
-\end{figure*}
 
 
 \section{Methods}
