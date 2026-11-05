@@ -330,6 +330,13 @@ To ensure that no conclusion depends on the particular 2D state, the state-const
 
 Proposition~\ref{prop:null} guarantees that the protocol should report no advantage on independently paired data, but a protocol that always reports no advantage would pass that test too. Two positive controls therefore ask whether the identical protocol---same split, normalization, model panel, shuffle control, multi-seed design, and paired statistics against the constant---detects temporal dependence when pseudo-trajectories do carry it. The two controls answer different questions: the simulation, where true trajectories are known, tests detection of genuinely recoverable dependence; the real-data control tests detection of the dependence induced by a chosen coupling, which need not be biological. Both are run at the original $N=200$ trajectories ($20$ seeds) and at $N=2{,}000$ ($10$ seeds), to test whether conclusions depend on the small sample that a Transformer might be expected to need more of.
 
+\begin{figure*}[!t]
+\centering
+\includegraphics[width=0.82\textwidth]{figures/fig2_forest.png}
+\caption{\textbf{The trained models are equivalent to one another, and all are beaten by a constant.} Paired difference $\Delta=\mathrm{MAE}_{\text{baseline}}-\mathrm{MAE}_{\text{Transformer}}$ ($n=20$ seeds) with percentile paired-bootstrap $95\%$ confidence intervals; positive values favour the Transformer's competitors. Annotations give Cohen's $d_z$ and Holm-corrected Wilcoxon signed-rank $p$. The shaded band marks the equivalence region $|\Delta|<0.01$. For Ridge and the complexity-matched random forest, every interval on both lineages lies within the band, supporting statistical equivalence. The constant training median (purple) lies outside the band on the favourable side on both lineages: it is significantly better than the Transformer.}
+\label{fig:forest}
+\end{figure*}
+
 \subsubsection{Simulated differentiation with a known coupling} Cell states $X=(P,D)$ follow the gradient stochastic differential equation
 \begin{equation}
 \begin{aligned}
@@ -419,12 +426,7 @@ Transformer & $0.1787$ & $+0.0110$ [$0.0063$, $0.0163$] & $0.1100$ & $+0.0241$ [
 \end{tabular}
 \end{table*}
 
-\begin{figure*}[!t]
-\centering
-\includegraphics[width=0.82\textwidth]{figures/fig2_forest.png}
-\caption{\textbf{The trained models are equivalent to one another, and all are beaten by a constant.} Paired difference $\Delta=\mathrm{MAE}_{\text{baseline}}-\mathrm{MAE}_{\text{Transformer}}$ ($n=20$ seeds) with percentile paired-bootstrap $95\%$ confidence intervals; positive values favour the Transformer's competitors. Annotations give Cohen's $d_z$ and Holm-corrected Wilcoxon signed-rank $p$. The shaded band marks the equivalence region $|\Delta|<0.01$. For Ridge and the complexity-matched random forest, every interval on both lineages lies within the band, supporting statistical equivalence. The constant training median (purple) lies outside the band on the favourable side on both lineages: it is significantly better than the Transformer.}
-\label{fig:forest}
-\end{figure*}
+
 
 \begin{figure*}[!t]
 \centering
